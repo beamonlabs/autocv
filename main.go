@@ -15,6 +15,7 @@ type Person struct {
   Name string
   Info string
 }
+type Persons []Person
 
 func getPersonHandler(response http.ResponseWriter, request *http.Request) {
   //handles call to the /api path
@@ -34,7 +35,8 @@ func main() {
   api := r.PathPrefix("/api").Subrouter()
 
   api.HandleFunc("/people/{id}", getPersonHandler).Methods("GET")
-  api.HandleFunc("/people", getPersonHandler).Methods("GET")
+
+  api.HandleFunc("/people", postPersonHandler).Methods("POST")
 
   r.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend/")))
 
