@@ -4,42 +4,41 @@ import (
     "fmt"
     "log"
     "net/http"
-    "gopkg.in/mgo.v2"
-    "gopkg.in/mgo.v2/bson"
+    "github.com/gorilla/mux"
+  //  "github.com/nu7hatch/gouuid"
+//    "gopkg.in/mgo.v2"
+//    "gopkg.in/mgo.v2/bson"
 )
 
 type Person struct {
-        Name string
-        Info string
+  Id [16] byte
+  Name string
+  Info string
+}
+
+func getPersonHandler(response http.ResponseWriter, request *http.Request) {
+  //handles call to the /api path
+
+  //Get id
+//  vars := mux.Vars(request)
+  //id := vars["id"]
+
+  //how do we parse the god damned url
+  fmt.Fprintf(response, "API CALL");
+
 }
 
 func main() {
+  r := mux.NewRouter()
 
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-      session, err := mgo.Dial("localhost")
-      if err != nil {
-             panic(err)
-      }
-      defer session.Close()
+  api := r.PathPrefix("/api").Subrouter()
 
-      // Optional. Switch the session to a monotonic behavior.
-      session.SetMode(mgo.Monotonic, true)
+  api.HandleFunc("/people/{id}", getPersonHandler).Methods("GET")
+  api.HandleFunc("/people", getPersonHandler).Methods("GET")
 
-      c := session.DB("autocv").C("people")
-      err = c.Insert(&Person{"Doopy Dorp", "Nice but dumb"},
-               &Person{"Clara Cloora", "Retard"})
-      if err != nil {
-             log.Fatal(err)
-      }
+  r.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend/")))
 
-      result := Person{}
-      err = c.Find(bson.M{"name": "Doopy Dorp"}).One(&result)
-      if err != nil {
-             log.Fatal(err)
-      }
-      fmt.Fprintf(w, "Name: %q", result.Name)
-    })
+  http.Handle("/", r)
 
-    log.Fatal(http.ListenAndServe(":8080", nil))
-
+  log.Fatal(http.ListenAndServe(":8080", nil))
 }
