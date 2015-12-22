@@ -16,14 +16,15 @@ test:
 #    - go vet ./...
   override:
 #    - godep go test ./...
-    - go build ./...
-    - docker build .
+     - make all
 deployment:
   prod:
     branch: master
     commands:
+      - docker build -t beamonlabs/autocv:latest .
       - docker push beamonlabs/autocv:latest
   dev: 
     branch: dev
     commands:
+      - docker build -t beamonlabs/autocv:dev .
       - docker push beamonlabs/autocv:dev
