@@ -1,3 +1,25 @@
-<div class="row" ng-repeat="person in people">
-{{ person.Name }}
+<div class="page-header">
+  <h1>Alla Beamon People</h1>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Namn</th>
+          <th>Info</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="person in people">
+          <td>{{ person.Id }}</td>
+          <td>{{ person.Name }}</td>
+          <td>{{ person.Info }}</td>
+          <td><button class="btn btn-danger btn-xs" ng-click="deletePerson(person.Id)">x</button>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -19,5 +19,12 @@ autocv.controller('PeopleCtrl', function($scope, $http) {
     $scope.people = data;
   }).error(function(msg, code) {
     console.log(msg);
-  })
+  });
+
+  $scope.deletePerson = function(id) {
+    $http.delete('/api/people/' + id).success(function(data) {
+    }).error(function(msg, code) {
+      console.log(msg);
+    });
+  }
 });

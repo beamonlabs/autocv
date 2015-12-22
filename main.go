@@ -34,7 +34,27 @@ func getPersonHandler(response http.ResponseWriter, request *http.Request) {
   if err := json.NewEncoder(response).Encode(person); err != nil {
       panic(err)
   }
+}
 
+func deletePersonHandler(response http.ResponseWriter, request *http.Request) {
+  //handles call to the /api path
+
+  //Get id
+  vars := mux.Vars(request)
+  id := vars["id"]
+
+  DeletePersonById(id);
+  response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+  response.WriteHeader(http.StatusOK)
+}
+
+func DeletePersonById(id string) {
+  Execute(func(session *mgo.Session) {
+    err := session.DB("autocv").C("person").Remove(bson.M{"id": id})
+    if err != nil {
+      panic(err)
+    }
+  })
 }
 
 func getPersonsHandler(response http.ResponseWriter, request *http.Request) {
@@ -44,7 +64,6 @@ func getPersonsHandler(response http.ResponseWriter, request *http.Request) {
   if err := json.NewEncoder(response).Encode(persons); err != nil {
       panic(err)
   }
-
 }
 
 func postPersonHandler(response http.ResponseWriter, request *http.Request) {
@@ -125,6 +144,8 @@ func main() {
   api := r.PathPrefix("/api").Subrouter()
 
   api.HandleFunc("/people/{id}", getPersonHandler).Methods("GET")
+  api.HandleFunc("/people/{id}", deletePersonHandler).Methods("DELETE")
+
   api.HandleFunc("/people/", getPersonsHandler).Methods("GET")
 
   api.HandleFunc("/people/", postPersonHandler).Methods("POST")
