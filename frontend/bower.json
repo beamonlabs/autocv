@@ -1,0 +1,23 @@
+{
+  "name": "frontend",
+  "authors": [
+    "Tommie Nygren <tommie.nygren@beamonpeople.se>"
+  ],
+  "description": "",
+  "main": "index.html",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "angularjs#~1.4.8",
+    "angular-ui-router": "ui-router#~0.2.15",
+    "bootstrap": "~3.3.6"
+  }
+}
