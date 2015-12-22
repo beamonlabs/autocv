@@ -2,6 +2,7 @@ machine:
   services:
     - docker
 
+
 dependencies:
   pre:
     - go get github.com/tools/godep
