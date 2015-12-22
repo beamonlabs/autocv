@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="person in people">
+        <tr ng-repeat="person in people" ng-click="editPerson(person.Id)">
           <td>{{ person.Id }}</td>
           <td>{{ person.Name }}</td>
           <td>{{ person.Info }}</td>
