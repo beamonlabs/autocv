@@ -4,7 +4,6 @@ import (
   "io"
   "encoding/json"
   "io/ioutil"
-  "fmt"
   "log"
   "net/http"
   "github.com/gorilla/mux"
@@ -26,11 +25,25 @@ func getPersonHandler(response http.ResponseWriter, request *http.Request) {
   //handles call to the /api path
 
   //Get id
-//  vars := mux.Vars(request)
-  //id := vars["id"]
+  vars := mux.Vars(request)
+  id := vars["id"]
 
-  //how do we parse the god damned url
-  fmt.Fprintf(response, "API CALL");
+  person := GetPersonById(id);
+  response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+  response.WriteHeader(http.StatusOK)
+  if err := json.NewEncoder(response).Encode(person); err != nil {
+      panic(err)
+  }
+
+}
+
+func getPersonsHandler(response http.ResponseWriter, request *http.Request) {
+  persons := GetAllPeople();
+  response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+  response.WriteHeader(http.StatusOK)
+  if err := json.NewEncoder(response).Encode(persons); err != nil {
+      panic(err)
+  }
 
 }
 
@@ -73,6 +86,18 @@ func GetPersonById(id string) Person {
   return result;
 }
 
+func GetAllPeople() Persons {
+  var persons Persons
+  Execute(func(session *mgo.Session) {
+    all := session.DB("autocv").C("person")
+    err := all.Find(nil).All(&persons)
+    if err != nil {
+           log.Fatal(err)
+    }
+  })
+  return persons
+}
+
 func StorePerson(person Person) {
   Execute(func(session *mgo.Session) {
     session.DB("autocv").C("person").Insert(person)
@@ -100,8 +125,9 @@ func main() {
   api := r.PathPrefix("/api").Subrouter()
 
   api.HandleFunc("/people/{id}", getPersonHandler).Methods("GET")
+  api.HandleFunc("/people/", getPersonsHandler).Methods("GET")
 
-  api.HandleFunc("/people", postPersonHandler).Methods("POST")
+  api.HandleFunc("/people/", postPersonHandler).Methods("POST")
 
   r.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend/")))
 
