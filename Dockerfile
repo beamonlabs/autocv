@@ -1,3 +1,5 @@
 FROM beamonlabs/autocv:latest
 
-ADD autocv ~/
+ADD main ~/
+
+CMD ~/main
