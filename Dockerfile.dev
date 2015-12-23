@@ -1,4 +1,4 @@
-FROM beamonlabs/autocv:latest
+FROM google/golang:latest
 
 COPY main main
 COPY frontend frontend
