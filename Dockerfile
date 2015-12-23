@@ -1,6 +1,6 @@
 FROM beamonlabs/autocv:latest
 
-COPY main $HOME
+COPY main main
 COPY frontend frontend
 
 CMD /go/src/app/main
