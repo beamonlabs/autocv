@@ -7,9 +7,11 @@ dependencies:
   pre:
     - go get github.com/tools/godep
   override:
-    - mkdir -p "$GOPATH/src/$IMPORT_PATH"
-    - mkdir -p "$GOPATH/bin/$IMPORT_PATH"
-    - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
+    #- mkdir -p "$GOPATH/src/$IMPORT_PATH"
+    #- mkdir -p "$GOPATH/bin/$IMPORT_PATH"
+    #- rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
+    - mkdir -p $GOPATH/src $GOPATH/bin
+    - export GOBIN=$GOPATH/bin
     - docker login --username=$DOCKERHUB_USERNAME --email=$DOCKERHUB_EMAIL --password=$DOCKERHUB_PASSWORD
 
 test:
@@ -17,7 +19,7 @@ test:
 #    - go vet ./...
   override:
 #    - godep go test ./...
-     - cd $GOPATH/src/$IMPORT_PATH
+     #- cd $GOPATH/src/$IMPORT_PATH
      - make
 deployment:
   prod:
