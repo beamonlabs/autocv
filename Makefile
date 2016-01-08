@@ -1,16 +1,10 @@
-all: pushmain pushautobuilder
-
-pushautobuilder: autobuilderimage
-	sudo docker push beamonlabs/autobuilder.latest
-
-pushmain: mainimage
-	sudo docker push beamonlabs/autocv:latest
+all: mainimage autobuilder
 
 autobuilderimage: autobuilder/*
-	sudo docker build -t beamonlabs/autobuilder:latest -f autobuilder/Dockerfile autobuilder
+	sudo docker build -t autobuilder -f autobuilder/Dockerfile autobuilder
 
 mainimage: main frontend/*
-	sudo docker build -t beamonlabs/autocv:latest .
+	sudo docker build -t autocv .
 
 main: bower goget main.go
 	go build main.go
