@@ -12,8 +12,12 @@ autobuilderimage: autobuilder/*
 mainimage: main frontend/*
 	sudo docker build -t beamonlabs/autocv:latest .
 
-main: bower main.go
+main: bower goget main.go
 	go build main.go
+
+goget:
+	go get
+
 bower:
 	cd frontend ; bower install
 
