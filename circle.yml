@@ -10,6 +10,7 @@ dependencies:
     - mkdir -p "$GOPATH/src/$IMPORT_PATH"
     - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
     - docker login --username=$DOCKERHUB_USERNAME --email=$DOCKERHUB_EMAIL --password=$DOCKERHUB_PASSWORD
+    - export GOPATH=$GOPATH:.
 
 test:
   pre:
