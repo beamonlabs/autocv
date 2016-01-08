@@ -9,7 +9,7 @@ pushmain: mainimage
 autobuilderimage: autobuilder/*
 	sudo docker build -t beamonlabs/autobuilder:latest -f autobuilder/Dockerfile autobuilder
 
-mainimage: main.go frontend/*
+mainimage: main frontend/*
 	sudo docker build -t beamonlabs/autocv:latest .
 
 main: bower main.go
