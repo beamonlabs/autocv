@@ -25,4 +25,5 @@ run: bower
 	go run main.go
 
 clean:
-	rm main
+	rm -f main
+	rm -rf node_modules
