@@ -1,4 +1,4 @@
-all: mainimage autobuilder
+all: mainimage autobuilderimage
 
 autobuilderimage: autobuilder/*
 	sudo docker build -t autobuilder -f autobuilder/Dockerfile autobuilder
