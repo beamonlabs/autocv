@@ -17,14 +17,14 @@ deployment:
   prod:
     branch: master
     commands:
-      - docker rename autobuilder beamonlabs/autobuilder:latest
-      - docker rename autocv beamonlabs/autocv:latest
+      - docker tag autobuilder beamonlabs/autobuilder:latest
+      - docker tag autocv beamonlabs/autocv:latest
       - docker push beamonlabs/autocv:latest
       - docker push beamonlabs/autobuilder:latest
   dev: 
     branch: dev
     commands:
-      - docker rename autobuilder beamonlabs/autobuilder:dev
-      - docker rename autocv beamonlabs/autocv:dev
+      - docker tag autobuilder beamonlabs/autobuilder:dev
+      - docker tag autocv beamonlabs/autocv:dev
       - docker push beamonlabs/autocv:dev
       - docker push beamonlabs/autobuilder:dev
