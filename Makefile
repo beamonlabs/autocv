@@ -1,6 +1,19 @@
-all: bower
-	go build main.go
+all: pushmain pushautobuilder
 
+pushautobuilder: autobuilderimage
+	sudo docker push beamonlabs/autobuilder.latest
+
+pushmain: mainimage
+	sudo docker push beamonlabs/autocv:latest
+
+autobuilderimage: autobuilder/*
+	sudo docker build -t beamonlabs/autobuilder:latest -f autobuilder/Dockerfile autobuilder
+
+mainimage: main.go frontend/*
+	sudo docker build -t beamonlabs/autocv:latest
+
+main: bower main.go
+	go build main.go
 bower:
 	cd frontend ; bower install
 

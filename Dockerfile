@@ -1,5 +1,5 @@
-FROM beamonlabs/autocv:latest
+FROM hypriot/rpi-golang:latest
 
-ADD main ~/
+ADD main /root/
 
-CMD ~/main
+CMD /root/main
