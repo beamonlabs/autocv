@@ -8,7 +8,7 @@ Vagrant.configure(2) do |config|
      vb.memory = "4096"
      vb.customize ["modifyvm", :id, "--vram", "32"]
    end
-
+ 
   config.vm.provision "shell", inline: <<-SHELL
      sudo apt-get update
      sudo apt-get purge gnome
@@ -18,13 +18,14 @@ Vagrant.configure(2) do |config|
      sudo apt-get install -y mongodb
      sudo apt-get install -y curl
      sudo apt-get install -y python3
-     sudo apt-get install -y nodejs
-     sudo apt-get install -y npm
+     sudo apt-get install -y nodejs npm
      sudo ln -s /usr/bin/nodejs /usr/bin/node
-     sudo npm install -g bower
+     sudo npm install bower -g
      curl -sSL https://get.docker.com/ | sh
      sudo apt-get install -y linux-image-generic-lts-trusty
-     git clone https://github.com/tokko/autocv.git
-     chown -R vagrant ~/autocv
+     mkdir -p ~/gohome/bin ~/gohome/src
+     chown -R vagrant ~/gohome
+     echo "export GOPATH=$HOME/gohome" >> ~/.bashrc
+     echo "export GOBIN=$GOPATH/bin" >> ~/.bashrc
    SHELL
 end
