@@ -1,7 +1,10 @@
-all: mainimage autobuilderimage
+pushall: pushmainimage 
 
-autobuilderimage: autobuilder/*
-	sudo docker build -t autobuilder -f autobuilder/Dockerfile autobuilder
+all: mainimage 
+
+pushmainimage: mainimage
+	sudo docker tag autocv beamonlabs/autocv:$(BRANCH)
+	sudo docker push beamonlabs/autocv:$(BRANCH)
 
 mainimage: main frontend/*
 	sudo docker build -t autocv .
