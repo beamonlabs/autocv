@@ -130,7 +130,7 @@ func Execute(fn func(session *mgo.Session)) {
 }
 
 func GetSession() *mgo.Session {
-  session, err := mgo.Dial("localhost")
+  session, err := mgo.Dial("mongo")
   if err != nil {
     panic(err)
   }

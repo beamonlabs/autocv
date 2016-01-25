@@ -1,0 +1,13 @@
+autocv:
+  build: .
+  ports:
+   - "8080:8080"
+  links:
+   - mongo
+mongo:
+  image: dhermanns/rpi-mongo
+  ports:
+   - "27017:27017"
+  volumes:
+   - $HOME/.mongo:/data/db
+
