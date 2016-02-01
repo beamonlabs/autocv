@@ -3,14 +3,17 @@ pushall: pushmainimage
 all: mainimage 
 
 pushmainimage: mainimage
-	sudo docker tag autocv beamonlabs/autocv:$(BRANCH)
+	sudo docker tag -f autocv beamonlabs/autocv:$(BRANCH)
 	sudo docker push beamonlabs/autocv:$(BRANCH)
 
 mainimage: 
-	sudo docker build -t autocv .
+	sudo docker build --rm -t autocv .
 
 main: bower goget main.go
 	go build main.go
+
+npm:
+	npm install frontend
 
 goget:
 	go get
