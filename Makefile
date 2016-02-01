@@ -22,7 +22,7 @@ bower:
 	cd /root/frontend ; bower --allow-root install
 
 run: mainimage
-	sudo docker run -d --restart=always -p 9090:8080 --name autocv autocv
+	sudo docker run -d --restart=always --link mongo -p 8080:8080 --name autocv autocv
 
 runi: mainimage
 	sudo docker run --rm=true -ti autocv bash

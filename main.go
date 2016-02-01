@@ -130,7 +130,7 @@ func Execute(fn func(session *mgo.Session)) {
 }
 
 func GetSession() *mgo.Session {
-  session, err := mgo.Dial("localhost")
+  session, err := mgo.Dial("0.0.0.0:27017")
   if err != nil {
     panic(err)
   }
