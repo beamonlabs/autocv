@@ -2,12 +2,14 @@ autocv:
   build: .
   ports:
    - "8080:8080"
+  environment:
+    MONGO_PORT: 27017
   links:
    - mongo
 mongo:
-  image: cretzel/rpi-mongodb
+  image: dhermanns/rpi-mongo
   ports:
    - "27017:27017"
-  volumes:
-   - $HOME/.mongo:/data/db
+  #volumes:
+  # - $HOME/.mongo:/data/db
 
