@@ -1,18 +1,22 @@
 <div class="page-header">
   <h1>Redigera</h1>
 </div>
-<div class="row">
-  <div class="col-md-6">
-    <label class="item item-input">
-        <span class="input-label">Namn</span>
-        <input type="text" ng-model="person.Name">
-    </label>
-    <label class="item item-input">
-  		<textarea placeholder="Beskrivning" ng-model="person.Info">
-  		</textarea>
-	 	</label>
+
+<form>
+  <div class="form-group">
+    <label for="name">Namn</label>
+    <input type="text" class="form-control" id="name" placeholder="Namn" ng-model="person.Name">
   </div>
-</div>
-
-
-{{ person.Name }}
+  <div class="form-group">
+    <label for="email">E-postaddress</label>
+    <input type="email" class="form-control" id="email" placeholder="Email" ng-model="person.Email">
+  </div>
+  <div class="form-group">
+    <label for="info">Info</label>
+    <textarea class="form-control" rows="3" id="info" ng-model="person.Info"></textarea>
+  </div>
+  <div>
+    Här kommer taggarna snart
+  </div>
+  <button type="submit" class="btn btn-success" ng-click="save()">Spara</button>
+</form>

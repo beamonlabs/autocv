@@ -1,12 +1,12 @@
-pushall: pushmainimage 
+pushall: pushmainimage
 
-all: mainimage 
+all: mainimage
 
 pushmainimage: mainimage
 	sudo docker tag -f autocv beamonlabs/autocv:$(BRANCH)
 	sudo docker push beamonlabs/autocv:$(BRANCH)
 
-mainimage: 
+mainimage:
 	sudo docker build --rm -t autocv .
 
 main: bower goget main.go
@@ -19,7 +19,7 @@ goget:
 	go get
 
 bower:
-	cd /root/frontend ; bower --allow-root install
+	cd frontend; bower --allow-root install
 
 run: mainimage
 	sudo docker run -d --restart=always --link mongo -p 8080:8080 --name autocv autocv

@@ -9,18 +9,17 @@ import (
   "github.com/gorilla/mux"
   "gopkg.in/mgo.v2"
   "gopkg.in/mgo.v2/bson"
-  //  "github.com/nu7hatch/gouuid"
 )
 
 type Tag struct  {
-  Id string
+  Id bson.ObjectId `bson:"_id,omitempty"`
   Name string
 }
 
 type Tags []Tag
 
 type Project struct {
-  Id string
+  Id bson.ObjectId `bson:"_id,omitempty"`
   Name string
   Description string
   Tags Tags
@@ -29,8 +28,9 @@ type Project struct {
 type Projects []Project
 
 type Person struct {
-  Id string
+  Id bson.ObjectId `bson:"_id,omitempty"`
   Name string
+  Email string
   Info string
   Projects Projects
   Tags Tags
@@ -112,9 +112,11 @@ func postPersonHandler(response http.ResponseWriter, request *http.Request) {
 func GetPersonById(id string) Person {
   result := Person{}
 
+  bsonId := bson.ObjectIdHex(id)
+
   Execute(func(session *mgo.Session) {
     all := session.DB("autocv").C("person")
-    err := all.Find(bson.M{"id": id}).One(&result)
+    err := all.Find(bson.M{"_id": bsonId}).One(&result)
     if err != nil {
            log.Fatal(err)
     }
@@ -137,7 +139,7 @@ func GetAllPeople() Persons {
 
 func StorePerson(person Person) {
   Execute(func(session *mgo.Session) {
-    session.DB("autocv").C("person").Insert(person)
+    session.DB("autocv").C("person").UpsertId(person.Id, person)
   })
 }
 
