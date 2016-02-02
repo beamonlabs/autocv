@@ -5,7 +5,7 @@ autocv:
   links:
    - mongo
 mongo:
-  image: dhermanns/rpi-mongo
+  image: cretzel/rpi-mongodb
   ports:
    - "27017:27017"
   volumes:
