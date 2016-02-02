@@ -1,0 +1,30 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  pre:
+    - go get github.com/tools/godep
+  override:
+    - mkdir -p $GOPATH/src $GOPATH/bin
+    - export GOBIN=$GOPATH/bin
+    - docker login --username=$DOCKERHUB_USERNAME --email=$DOCKERHUB_EMAIL --password=$DOCKERHUB_PASSWORD
+
+test:
+  override:
+     - make
+deployment:
+  prod:
+    branch: master
+    commands:
+      - docker tag autobuilder beamonlabs/autobuilder:latest
+      - docker tag autocv beamonlabs/autocv:latest
+      - docker push beamonlabs/autocv:latest
+      - docker push beamonlabs/autobuilder:latest
+  dev: 
+    branch: dev
+    commands:
+      - docker tag autobuilder beamonlabs/autobuilder:dev
+      - docker tag autocv beamonlabs/autocv:dev
+      - docker push beamonlabs/autocv:dev
+      - docker push beamonlabs/autobuilder:dev
