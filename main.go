@@ -12,10 +12,28 @@ import (
   //  "github.com/nu7hatch/gouuid"
 )
 
+type Tag struct  {
+  Id string
+  Name string
+}
+
+type Tags []Tag
+
+type Project struct {
+  Id string
+  Name string
+  Description string
+  Tags Tags
+}
+
+type Projects []Project
+
 type Person struct {
   Id string
   Name string
   Info string
+  Projects Projects
+  Tags Tags
 }
 
 type Persons []Person
