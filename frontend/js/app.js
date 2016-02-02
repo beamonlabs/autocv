@@ -15,6 +15,11 @@ autocv.config(function($stateProvider, $urlRouterProvider){
       templateUrl: "templates/editperson.html",
       controller: "EditCtrl"
     })
+    .state('add', {
+      url:"/add",
+      templateUrl: "templates/editperson.html",
+      controller: "AddCtrl"
+    })
 });
 
 //People List Controller
@@ -44,5 +49,26 @@ autocv.controller('EditCtrl', function($scope, $http, $state, $stateParams) {
     $scope.person = data;
   }).error(function(msg, code) {
     console.log(msg);
-  })
+  });
+  $scope.save = function() {
+    $http.post('api/people/', $scope.person).success(function(msg, code) {
+      $state.go('home');
+    }).error(function(msg, code) {
+      console.log(msg);
+    })
+  }
+});
+
+autocv.controller('AddCtrl', function($scope, $http, $state, $stateParams) {
+  $scope.person = {};
+  $scope.save = function() {
+    if($scope.person.Id === 'undefined') {
+      $scope.person.Id = '';
+    }
+    $http.post('api/people/', $scope.person).success(function(msg, code) {
+      $state.go('home');
+    }).error(function(msg, code) {
+      console.log(msg);
+    })
+  }
 });
