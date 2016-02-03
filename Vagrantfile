@@ -8,24 +8,25 @@ Vagrant.configure(2) do |config|
      vb.memory = "4096"
      vb.customize ["modifyvm", :id, "--vram", "32"]
    end
- 
+
   config.vm.provision "shell", inline: <<-SHELL
      sudo apt-get update
-     sudo apt-get purge gnome
-     sudo apt-get install -y git
-     sudo apt-get install -y vim
-     sudo apt-get install -y golang
-     sudo apt-get install -y mongodb
-     sudo apt-get install -y curl
-     sudo apt-get install -y python3
-     sudo apt-get install -y nodejs npm
+     sudo apt-get install -y git vim golang mongodb curl python3 nodejs npm
+     mkdir -p /home/vagrant/gohome/src
+     mkdir -p /home/vagrant/gohome/bin
+     sudo chown -R vagrant /home/vagrant/gohome
+     sudo echo "export GOPATH=/home/vagrant/gohome" >> /etc/profile
+     sudo echo "export GOBIN=/home/vagrant/gohome/bin" >> /etc/profile
      sudo ln -s /usr/bin/nodejs /usr/bin/node
-     sudo npm install bower -g
-     curl -sSL https://get.docker.com/ | sh
-     sudo apt-get install -y linux-image-generic-lts-trusty
-     mkdir -p ~/gohome/bin ~/gohome/src
-     chown -R vagrant ~/gohome
-     echo "export GOPATH=$HOME/gohome" >> ~/.bashrc
-     echo "export GOBIN=$GOPATH/bin" >> ~/.bashrc
+     sudo npm install -g bower
+     sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+     sudo echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" >> /etc/apt/sources.list.d/docker.list
+     sudo apt-get update
+     sudo apt-get purge -y lxc-docker
+     sudo apt-get install -y docker-engine
+     sudo gpasswd -a vagrant
+     sudo service docker restart
+     sudo curl -L https://github.com/docker/compose/releases/download/1.6.0-rc2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
    SHELL
 end
