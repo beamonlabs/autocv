@@ -13,14 +13,14 @@ import (
 )
 
 type Tag struct  {
-  Id bson.ObjectId `bson:"_id,omitempty"`
-  Name string
+  Name string `bson:"_id"`
+  Description string
 }
 
 type Tags []Tag
 
 type Project struct {
-  Id bson.ObjectId `bson:"_id,omitempty"`
+  Id string `bson:"_id"`
   Name string
   Description string
   Tags Tags
@@ -29,9 +29,8 @@ type Project struct {
 type Projects []Project
 
 type Person struct {
-  Id bson.ObjectId `bson:"_id,omitempty"`
   Name string
-  Email string
+  Email string `bson:"_id"`
   Info string
   Projects Projects
   Tags Tags
@@ -45,9 +44,9 @@ func getPersonHandler(response http.ResponseWriter, request *http.Request) {
 
   //Get id
   vars := mux.Vars(request)
-  id := vars["id"]
+  email := vars["email"]
 
-  person := GetPersonById(id);
+  person := GetPersonByEmail(email);
   response.Header().Set("Content-Type", "application/json; charset=UTF-8")
   response.WriteHeader(http.StatusOK)
   if err := json.NewEncoder(response).Encode(person); err != nil {
@@ -60,16 +59,16 @@ func deletePersonHandler(response http.ResponseWriter, request *http.Request) {
 
   //Get id
   vars := mux.Vars(request)
-  id := vars["id"]
+  email := vars["email"]
 
-  DeletePersonById(id);
+  DeletePersonByEmail(email);
   response.Header().Set("Content-Type", "application/json; charset=UTF-8")
   response.WriteHeader(http.StatusOK)
 }
 
-func DeletePersonById(id string) {
+func DeletePersonByEmail(email string) {
   Execute(func(session *mgo.Session) {
-    err := session.DB("autocv").C("person").Remove(bson.M{"_id": id})
+    err := session.DB("autocv").C("person").Remove(bson.M{"Email": email})
     if err != nil {
       panic(err)
     }
@@ -120,9 +119,6 @@ func postTagHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func postPersonHandler(response http.ResponseWriter, request *http.Request) {
-  //deserialize Person
-
-  //save to db
   var person Person
     body, err := ioutil.ReadAll(io.LimitReader(request.Body, 1048576))
     if err != nil {
@@ -144,16 +140,14 @@ func postPersonHandler(response http.ResponseWriter, request *http.Request) {
     response.WriteHeader(http.StatusCreated)
 }
 
-func GetPersonById(id string) Person {
+func GetPersonByEmail(email string) Person {
   result := Person{}
-
-  bsonId := bson.ObjectIdHex(id)
 
   Execute(func(session *mgo.Session) {
     all := session.DB("autocv").C("person")
-    err := all.Find(bson.M{"_id": bsonId}).One(&result)
+    err := all.Find(bson.M{"_id": email}).One(&result)
     if err != nil {
-           panic(err)
+      panic(err)
     }
   })
 
@@ -174,7 +168,7 @@ func GetAllTags() Tags {
 
 func StoreTag(tag Tag) {
   Execute(func(session *mgo.Session) {
-    session.DB("autocv").C("tag").UpsertId(tag.Id, tag)
+    session.DB("autocv").C("tag").UpsertId(tag.Name, tag)
   })
 }
 
@@ -192,7 +186,7 @@ func GetAllPeople() Persons {
 
 func StorePerson(person Person) {
   Execute(func(session *mgo.Session) {
-    session.DB("autocv").C("person").UpsertId(person.Id, person)
+    session.DB("autocv").C("person").UpsertId(person.Email, person)
   })
 }
 
@@ -216,8 +210,8 @@ func main() {
 
   api := r.PathPrefix("/api").Subrouter()
 
-  api.HandleFunc("/people/{id}", getPersonHandler).Methods("GET")
-  api.HandleFunc("/people/{id}", deletePersonHandler).Methods("DELETE")
+  api.HandleFunc("/people/{email}", getPersonHandler).Methods("GET")
+  api.HandleFunc("/people/{email}", deletePersonHandler).Methods("DELETE")
 
   api.HandleFunc("/people/", getPersonsHandler).Methods("GET")
 
