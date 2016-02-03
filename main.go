@@ -1,7 +1,6 @@
 package main
 
 import (
-  "os"
   "io"
   "encoding/json"
   "io/ioutil"
@@ -151,7 +150,7 @@ func Execute(fn func(session *mgo.Session)) {
 }
 
 func GetSession() *mgo.Session {
-  session, err := mgo.Dial(os.Args[1])
+  session, err := mgo.Dial("0.0.0.0:27017")
   if err != nil {
     panic(err)
   }
