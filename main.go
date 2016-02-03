@@ -1,6 +1,7 @@
 package main
 
 import (
+  "os"
   "io"
   "encoding/json"
   "io/ioutil"
@@ -68,7 +69,7 @@ func deletePersonHandler(response http.ResponseWriter, request *http.Request) {
 
 func DeletePersonById(id string) {
   Execute(func(session *mgo.Session) {
-    err := session.DB("autocv").C("person").Remove(bson.M{"id": id})
+    err := session.DB("autocv").C("person").Remove(bson.M{"_id": id})
     if err != nil {
       panic(err)
     }
@@ -152,7 +153,7 @@ func GetPersonById(id string) Person {
     all := session.DB("autocv").C("person")
     err := all.Find(bson.M{"_id": bsonId}).One(&result)
     if err != nil {
-           log.Fatal(err)
+           panic(err)
     }
   })
 
@@ -165,7 +166,7 @@ func GetAllTags() Tags {
     all := session.DB("autocv").C("tag")
     err := all.Find(nil).All(&tags)
     if err != nil {
-      log.Fatal(err)
+      panic(err)
     }
   })
   return tags;
@@ -183,7 +184,7 @@ func GetAllPeople() Persons {
     all := session.DB("autocv").C("person")
     err := all.Find(nil).All(&persons)
     if err != nil {
-           log.Fatal(err)
+      panic(err)
     }
   })
   return persons
@@ -202,7 +203,7 @@ func Execute(fn func(session *mgo.Session)) {
 }
 
 func GetSession() *mgo.Session {
-  session, err := mgo.Dial("0.0.0.0:27017")
+  session, err := mgo.Dial(os.Args[1])
   if err != nil {
     panic(err)
   }
