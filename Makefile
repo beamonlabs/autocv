@@ -21,9 +21,8 @@ goget:
 bower:
 	cd frontend; bower --allow-root install
 
-mun: mainimage runmongo
-	sudo docker rm -f $(docker ps -a -q)
-	sudo docker run  --rm --link mongo -p 8080:8080 --name autocv autocv
+run: mainimage
+	sudo docker run --rm --link mongo -p 8080:8080 --name autocv autocv
 
 runmongo:
 	sudo docker run -d --restart=always --name mongo -p 27030:27017 dhermanns/rpi-mongo
