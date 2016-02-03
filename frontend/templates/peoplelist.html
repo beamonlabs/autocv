@@ -13,11 +13,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="person in people" ng-click="editPerson(person.Id)">
-          <td>{{ person.Id }}</td>
+        <tr ng-repeat="person in people" ng-click="editPerson(person.Email)">
+          <td>{{ person.Email }}</td>
           <td>{{ person.Name }}</td>
           <td>{{ person.Info }}</td>
-          <td><button class="btn btn-danger btn-xs" ng-click="deletePerson(person.Id)">x</button>
+          <td><button class="btn btn-danger btn-xs" ng-click="deletePerson(person.Email)">x</button>
         </tr>
       </tbody>
     </table>

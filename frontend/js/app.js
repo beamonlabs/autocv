@@ -11,7 +11,7 @@ autocv.config(function($stateProvider, $urlRouterProvider){
       controller: "PeopleCtrl"
     })
     .state('edit', {
-      url:"/edit/:id",
+      url:"/edit/:email",
       templateUrl: "templates/editperson.html",
       controller: "EditCtrl"
     })
@@ -31,25 +31,39 @@ autocv.controller('PeopleCtrl', function($scope, $http, $state) {
     console.log(msg);
   });
 
-  $scope.deletePerson = function(id) {
-    $http.delete('/api/people/' + id).success(function(data) {
+  $scope.deletePerson = function(email) {
+    $http.delete('/api/people/' + email).success(function(data) {
     }).error(function(msg, code) {
       console.log(msg);
     });
   }
 
-  $scope.editPerson = function(id) {
-    $state.go("edit", {"id": id });
+  $scope.editPerson = function(email) {
+    $state.go("edit", {"email": email });
   }
 });
 
 autocv.controller('EditCtrl', function($scope, $http, $state, $stateParams) {
   $scope.person = {};
-  $http.get('api/people/' + $stateParams.id).success(function(data) {
+  $http.get('api/people/' + $stateParams.email).success(function(data) {
     $scope.person = data;
+    $scope.person.Tags = [{Id: "1", Name: "Microsoft.NET"},{Id:"2", Name: "C#"},{Id:"3", Name:"Scrum"}];
   }).error(function(msg, code) {
     console.log(msg);
   });
+
+  $scope.tags = [];
+
+  $http.get('/api/tags/').success(function(data) {
+    $scope.tags = data;
+  }).error(function(msg, code) {
+    console.log(msg);
+  });
+
+  $scope.removeTag = function(id) {
+    console.log("remove id " + id);
+  };
+
   $scope.save = function() {
     $http.post('api/people/', $scope.person).success(function(msg, code) {
       $state.go('home');
@@ -62,9 +76,6 @@ autocv.controller('EditCtrl', function($scope, $http, $state, $stateParams) {
 autocv.controller('AddCtrl', function($scope, $http, $state, $stateParams) {
   $scope.person = {};
   $scope.save = function() {
-    if($scope.person.Id === 'undefined') {
-      $scope.person.Id = '';
-    }
     $http.post('api/people/', $scope.person).success(function(msg, code) {
       $state.go('home');
     }).error(function(msg, code) {
