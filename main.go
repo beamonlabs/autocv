@@ -84,6 +84,40 @@ func getPersonsHandler(response http.ResponseWriter, request *http.Request) {
   }
 }
 
+func getTagsHandler(response http.ResponseWriter, request *http.Request) {
+  tags := GetAllTags();
+  response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+  response.WriteHeader(http.StatusOK)
+  if err := json.NewEncoder(response).Encode(tags); err != nil {
+      panic(err)
+  }
+}
+
+func postTagHandler(response http.ResponseWriter, request *http.Request) {
+  //deserialize Person
+
+  //save to db
+  var tag Tag
+    body, err := ioutil.ReadAll(io.LimitReader(request.Body, 1048576))
+    if err != nil {
+        panic(err)
+    }
+    if err := request.Body.Close(); err != nil {
+        panic(err)
+    }
+    if err := json.Unmarshal(body, &tag); err != nil {
+        response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+        response.WriteHeader(422) // unprocessable entity
+        if err := json.NewEncoder(response).Encode(err); err != nil {
+            panic(err)
+        }
+    }
+
+    StoreTag(tag)
+    response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+    response.WriteHeader(http.StatusCreated)
+}
+
 func postPersonHandler(response http.ResponseWriter, request *http.Request) {
   //deserialize Person
 
@@ -123,6 +157,24 @@ func GetPersonById(id string) Person {
   })
 
   return result;
+}
+
+func GetAllTags() Tags {
+  var tags Tags
+  Execute(func(session *mgo.Session) {
+    all := session.DB("autocv").C("tag")
+    err := all.Find(nil).All(&tags)
+    if err != nil {
+      log.Fatal(err)
+    }
+  })
+  return tags;
+}
+
+func StoreTag(tag Tag) {
+  Execute(func(session *mgo.Session) {
+    session.DB("autocv").C("tag").UpsertId(tag.Id, tag)
+  })
 }
 
 func GetAllPeople() Persons {
@@ -169,6 +221,9 @@ func main() {
   api.HandleFunc("/people/", getPersonsHandler).Methods("GET")
 
   api.HandleFunc("/people/", postPersonHandler).Methods("POST")
+
+  api.HandleFunc("/tags/", getTagsHandler).Methods("GET")
+  api.HandleFunc("/tags/", postTagHandler).Methods("POST")
 
   r.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend/")))
 
