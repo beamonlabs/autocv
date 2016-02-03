@@ -21,9 +21,8 @@ goget:
 bower:
 	cd frontend; bower --allow-root install
 
-run: mainimage runmongo
-	sudo docker rm -f autocv
-	sudo docker run -d --restart=always --link mongo -p 8080:8080 --name autocv autocv
+run: mainimage
+	sudo docker run --rm --link mongo -p 8080:8080 --name autocv autocv
 
 runmongo:
 	(sudo docker ps | grep mongo) || sudo docker run -d --restart=always --name mongo -p 27030:27017 mvertes/alpine-mongo
