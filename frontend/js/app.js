@@ -47,9 +47,23 @@ autocv.controller('EditCtrl', function($scope, $http, $state, $stateParams) {
   $scope.person = {};
   $http.get('api/people/' + $stateParams.id).success(function(data) {
     $scope.person = data;
+    $scope.person.Tags = [{Id: "1", Name: "Microsoft.NET"},{Id:"2", Name: "C#"},{Id:"3", Name:"Scrum"}];
   }).error(function(msg, code) {
     console.log(msg);
   });
+
+  $scope.tags = [];
+
+  $http.get('/api/tags/').success(function(data) {
+    $scope.tags = data;
+  }).error(function(msg, code) {
+    console.log(msg);
+  });
+
+  $scope.removeTag = function(id) {
+    console.log("remove id " + id);
+  };
+
   $scope.save = function() {
     $http.post('api/people/', $scope.person).success(function(msg, code) {
       $state.go('home');

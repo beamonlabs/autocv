@@ -16,7 +16,13 @@
     <textarea class="form-control" rows="3" id="info" ng-model="person.Info"></textarea>
   </div>
   <div>
-    Här kommer taggarna snart
+    <div class="form-group">
+      <div ng-repeat="tag in person.Tags">
+        <button class="btn btn-info btn-sm" type="button">
+          {{ tag.Name }}
+          <span class="glyphicon glyphicon-remove-sign" aria-hidden="true" ng-click="removeTag(tag.Id)"></span>
+      </div>
+    </div>
   </div>
   <button type="submit" class="btn btn-success" ng-click="save()">Spara</button>
 </form>
