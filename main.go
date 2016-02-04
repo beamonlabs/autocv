@@ -94,8 +94,7 @@ func getTagsHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func postTagHandler(response http.ResponseWriter, request *http.Request) {
-  //deserialize Person
-
+  
   //save to db
   var tag Tag
     body, err := ioutil.ReadAll(io.LimitReader(request.Body, 1048576))

@@ -2,27 +2,35 @@
   <h1>Redigera</h1>
 </div>
 
-<form>
+<form ng-submit="submit()">
   <div class="form-group">
     <label for="name">Namn</label>
-    <input type="text" class="form-control" id="name" placeholder="Namn" ng-model="person.Name">
+    <input type="text" class="form-control" id="name" placeholder="Namn" ng-model="person.Name" />
   </div>
   <div class="form-group">
     <label for="email">E-postaddress</label>
-    <input type="email" class="form-control" id="email" placeholder="Email" ng-model="person.Email">
+    <input type="email" class="form-control" id="email" placeholder="Email" ng-model="person.Email" />
   </div>
   <div class="form-group">
-    <label for="info">Info</label>
+    <label for="info">Personlig info</label>
     <textarea class="form-control" rows="3" id="info" ng-model="person.Info"></textarea>
   </div>
-  <div>
-    <div class="form-group">
-      <div ng-repeat="tag in person.Tags">
-        <button class="btn btn-info btn-sm" type="button">
-          {{ tag.Name }}
-          <span class="glyphicon glyphicon-remove-sign" aria-hidden="true" ng-click="removeTag(tag.Id)"></span>
-      </div>
+  <div class="form-group">
+    <label for="tagFind">Hitta kompetens</label>
+    <input type="text" class="form-control" id="tagFind" ng-keyup="keyUp($event)" ng-model="tagName" />
+    <div ng-repeat="tag in tags() | filter:tagName">
+      <button class="btn btn-info btn-sm" type="button" ng-click="addTag(tag)">
+        {{ tag }}
+      <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span><br/>
     </div>
   </div>
-  <button type="submit" class="btn btn-success" ng-click="save()">Spara</button>
+  <div class="form-group">
+    <label>Saker jag kan</label>
+    <div ng-repeat="tag in person.Tags">
+      <button class="btn btn-info btn-sm" type="button" ng-click="removeTag(tag)">
+        {{ tag.Name }}
+        <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span><br/>
+    </div>
+  </div>
+  <button type="button" class="btn btn-success" ng-click="save()">Spara</button>
 </form>

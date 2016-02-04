@@ -18,14 +18,15 @@ autocv.config(function($stateProvider, $urlRouterProvider){
     .state('add', {
       url:"/add",
       templateUrl: "templates/editperson.html",
-      controller: "AddCtrl"
+      controller: "EditCtrl"
     })
 });
 
 //People List Controller
 autocv.controller('PeopleCtrl', function($scope, $http, $state) {
   $scope.people = [];
-  $http.get('/api/people/').success(function(data) {
+  $http.get('/api/people/')
+  .success(function(data) {
     $scope.people = data;
   }).error(function(msg, code) {
     console.log(msg);
@@ -43,25 +44,53 @@ autocv.controller('PeopleCtrl', function($scope, $http, $state) {
   }
 });
 
-autocv.controller('EditCtrl', function($scope, $http, $state, $stateParams) {
+autocv.controller('EditCtrl', function($scope, $http, $state, $stateParams, tagService) {
   $scope.person = {};
-  $http.get('api/people/' + $stateParams.email).success(function(data) {
-    $scope.person = data;
-    $scope.person.Tags = [{Id: "1", Name: "Microsoft.NET"},{Id:"2", Name: "C#"},{Id:"3", Name:"Scrum"}];
-  }).error(function(msg, code) {
-    console.log(msg);
-  });
 
-  $scope.tags = [];
+  if($stateParams.email !== 'undefined') {
+    $http.get('api/people/' + $stateParams.email)
+    .success(function(data) {
+      $scope.person = data;
+    }).error(function(msg, code) {
+      console.log(msg);
+    });
+  }
 
-  $http.get('/api/tags/').success(function(data) {
-    $scope.tags = data;
-  }).error(function(msg, code) {
-    console.log(msg);
-  });
+  $scope.tagName = '';
 
-  $scope.removeTag = function(id) {
-    console.log("remove id " + id);
+  $scope.submit = function() {
+      //Do nothing?
+  };
+
+  $scope.addTag = function(tagName) {
+    if(tagName.length > 2) {
+      var tag = tagService.saveIfNew(tagName, function(tagName) {
+        console.log(tagName + ' saved successfully!')
+      });
+      if(!_.contains($scope.person.Tags, tag)) {
+        $scope.person.Tags.push(tag);
+        $scope.tagName = '';
+      }
+    }
+  };
+
+  $scope.keyUp = function(event) {
+    if(event.keyCode === 13) {
+      $scope.addTag($scope.tagName);
+      $scope.tagName = '';
+    }
+  };
+
+  $scope.removeTag = function(tagToRemove) {
+    $scope.person.Tags = _.reject($scope.person.Tags, function(tag) {
+      return tag.Name == tagToRemove.Name;
+    });
+  };
+
+  $scope.tags = function() {
+    return _.difference(tagService.allTagNames(), _.map($scope.person.Tags, function(tag) {
+      return tag.Name;
+    }));
   };
 
   $scope.save = function() {
@@ -73,13 +102,49 @@ autocv.controller('EditCtrl', function($scope, $http, $state, $stateParams) {
   }
 });
 
-autocv.controller('AddCtrl', function($scope, $http, $state, $stateParams) {
-  $scope.person = {};
-  $scope.save = function() {
-    $http.post('api/people/', $scope.person).success(function(msg, code) {
-      $state.go('home');
-    }).error(function(msg, code) {
-      console.log(msg);
+autocv.factory('tagService',['$http', function($http) {
+  var instance = {};
+  instance.tags = [];
+
+  $http.get('/api/tags/').success(function(data) {
+    instance.tags = data;
+  }).error(function(msg, code) {
+    alert('error getting tags');
+  });
+
+  instance.allTagNames = function() {
+    return _.map(instance.tags, function(tag) {
+      return tag.Name;
     })
+  };
+
+  instance.filteredTags = function(filter) {
+    if(filter.length < 3) {
+      return [];
+    }
+    return _.filter(instance.allTagNames(), filter);
+  };
+
+  instance.tagExists = function(tagName) {
+    return _.contains(instance.allTagNames(), tagName);
+  };
+
+  instance.saveIfNew = function(tagName, success) {
+    var tag = { Name: tagName };
+    if(!instance.tagExists(tagName)) {
+      $http.post('/api/tags/', tag)
+      .success(function(msg,code) {
+          instance.tags.push(tag);
+        if(success !== 'undefined') {
+          success(tagName);
+        }
+      })
+      .error(function(msg, code) {
+        alert('couldnt save tag');
+      })
+    };
+    return tag;
   }
-});
+
+  return instance;
+}]);
