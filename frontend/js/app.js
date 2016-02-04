@@ -63,7 +63,7 @@ autocv.controller('EditCtrl', function($scope, $http, $state, $stateParams, tagS
   };
 
   $scope.addTag = function(tagName) {
-    if(tagName.length > 2) {
+    if(tagName.length > 1) {
       var tag = tagService.saveIfNew(tagName, function(tagName) {
         console.log(tagName + ' saved successfully!')
       });
