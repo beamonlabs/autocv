@@ -1,4 +1,4 @@
-FROM dduportal/rpi-alpine
+FROM alpine
 
 WORKDIR /root
 
@@ -22,4 +22,3 @@ COPY main.go start.sh Makefile /root/
 RUN	make main && \
 	apk del git python make && \
 	rm -rf /var/cache/apk/* /root/Makefile /root/main.go
-

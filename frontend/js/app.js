@@ -29,5 +29,4 @@ autocv.config(function($stateProvider, $urlRouterProvider){
       url: "/match",
       templateUrl: "templates/match.html",
       controller: "MatchCtrl"
-    })
 });

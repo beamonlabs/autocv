@@ -22,10 +22,10 @@ bower:
 	cd frontend; bower --allow-root install
 
 run: mainimage
-	sudo docker run -d --restart=always --link mongo -p 8080:8080 --name autocv autocv
+	sudo docker run --rm --link mongo -p 8080:8080 --name autocv autocv
 
-runi: mainimage
-	sudo docker run --rm=true -ti autocv bash
+runmongo:
+	sudo docker run -d --restart=always --name mongo -p 27030:27017 mvertes/alpine-mongo
 
 install_dev:
 	sudo apt-get install -y nodejs npm
