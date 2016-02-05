@@ -33,6 +33,8 @@ type Person struct {
   Info string
   Projects Projects
   Tags Tags
+  WantedSkills Tags
+  TeachingSkills Tags
 }
 
 type Persons []Person
