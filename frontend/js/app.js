@@ -1,4 +1,4 @@
-var autocv = angular.module('autocv', ['ui.router']);
+var autocv = angular.module('autocv', ['ui.router','ngToast']);
 
 //Route Config
 autocv.config(function($stateProvider, $urlRouterProvider){
@@ -11,64 +11,23 @@ autocv.config(function($stateProvider, $urlRouterProvider){
       controller: "PeopleCtrl"
     })
     .state('edit', {
-      url:"/edit/:id",
+      url:"/edit/:email",
       templateUrl: "templates/editperson.html",
       controller: "EditCtrl"
     })
     .state('add', {
       url:"/add",
       templateUrl: "templates/editperson.html",
-      controller: "AddCtrl"
+      controller: "EditCtrl"
     })
-});
-
-//People List Controller
-autocv.controller('PeopleCtrl', function($scope, $http, $state) {
-  $scope.people = [];
-  $http.get('/api/people/').success(function(data) {
-    $scope.people = data;
-  }).error(function(msg, code) {
-    console.log(msg);
-  });
-
-  $scope.deletePerson = function(id) {
-    $http.delete('/api/people/' + id).success(function(data) {
-    }).error(function(msg, code) {
-      console.log(msg);
-    });
-  }
-
-  $scope.editPerson = function(id) {
-    $state.go("edit", {"id": id });
-  }
-});
-
-autocv.controller('EditCtrl', function($scope, $http, $state, $stateParams) {
-  $scope.person = {};
-  $http.get('api/people/' + $stateParams.id).success(function(data) {
-    $scope.person = data;
-  }).error(function(msg, code) {
-    console.log(msg);
-  });
-  $scope.save = function() {
-    $http.post('api/people/', $scope.person).success(function(msg, code) {
-      $state.go('home');
-    }).error(function(msg, code) {
-      console.log(msg);
+    .state('tags', {
+      url: "/tags",
+      templateUrl: "templates/tagList.html",
+      controller: "TagsCtrl"
     })
-  }
-});
-
-autocv.controller('AddCtrl', function($scope, $http, $state, $stateParams) {
-  $scope.person = {};
-  $scope.save = function() {
-    if($scope.person.Id === 'undefined') {
-      $scope.person.Id = '';
-    }
-    $http.post('api/people/', $scope.person).success(function(msg, code) {
-      $state.go('home');
-    }).error(function(msg, code) {
-      console.log(msg);
+    .state('match', {
+      url: "/match",
+      templateUrl: "templates/match.html",
+      controller: "MatchCtrl"
     })
-  }
 });
