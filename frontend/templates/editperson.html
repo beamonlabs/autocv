@@ -16,7 +16,6 @@
     <label for="info">Personlig info</label>
     <textarea class="form-control" rows="3" id="info" ng-model="person.Info"></textarea>
   </div>
-<<<<<<< HEAD
   <div class="form-group">
     <label for="tagFind">Hitta kompetens</label>
     <input type="text" class="form-control" id="tagFind" ng-keyup="keyUp($event)" ng-model="tagName" />
@@ -32,15 +31,6 @@
       <button class="btn btn-info btn-sm" type="button" ng-click="removeTag(tag)">
         {{ tag.Name }}
         <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span><br/>
-=======
-  <div>
-    <div class="form-group">
-      <div ng-repeat="tag in person.Tags">
-        <button class="btn btn-info btn-sm" type="button">
-          {{ tag.Name }}
-          <span class="glyphicon glyphicon-remove-sign" aria-hidden="true" ng-click="removeTag(tag.Id)"></span>
-      </div>
->>>>>>> redis
     </div>
   </div>
   <button type="button" class="btn btn-success" ng-click="save()">Spara</button>
