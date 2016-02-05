@@ -1,8 +1,8 @@
-var autocv = angular.module('autocv', ['ui.router','ngToast']);
+'use strict';
 
-//People List Controller
-autocv.controller('PeopleCtrl', function($scope, $http, $state) {
+angular.module('autocv').controller('PeopleCtrl', function($scope, $http, $state) {
   $scope.people = [];
+  
   $http.get('/api/people/')
   .success(function(data) {
     $scope.people = data;
@@ -20,18 +20,26 @@ autocv.controller('PeopleCtrl', function($scope, $http, $state) {
   $scope.editPerson = function(email) {
     $state.go("edit", {"email": email });
   }
-});
+})
 
-autocv.controller('EditCtrl', function($scope, $http, $state, $stateParams, ngToast, tagService) {
-  $scope.person = {};
+.controller('TagsCtrl', function($scope, $http, $state, TagService) {
+  $scope.tags = [];
+})
 
-  if($stateParams.email !== 'undefined') {
+.controller('MatchCtrl', function($scope, $http, $state, TagService) {
+  $scope.someData = {};
+})
+
+.controller('EditCtrl', function($scope, $http, $state, $stateParams, ngToast, TagService) {
+  $scope.person = {Tags: []};
+
+  if(typeof($stateParams.email) !== 'undefined') {
     $http.get('api/people/' + $stateParams.email)
-    .success(function(data) {
+        .success(function(data) {
       $scope.person = data;
-    }).error(function(msg, code) {
+        }).error(function(msg, code) {
       console.log(msg);
-    });
+     });
   }
 
   $scope.tagName = '';
@@ -42,13 +50,17 @@ autocv.controller('EditCtrl', function($scope, $http, $state, $stateParams, ngTo
 
   $scope.addTag = function(tagName) {
     if(tagName.length > 1) {
-      var tag = tagService.saveIfNew(tagName, function(tagName) {
-        ngToast.create(tagName + ' saved successfully!');
-      });
-      if(!_.contains($scope.person.Tags, tag)) {
-        $scope.person.Tags.push(tag);
-        $scope.tagName = '';
-      }
+      TagService.saveIfNew(tagName)
+        .then(function(tag) {
+            ngToast.create(tag.Name + ' added to your skills!');
+            if(!_.contains($scope.person.Tags, tag)) {
+                $scope.person.Tags.push(tag);
+                $scope.tagName = '';
+            }
+        }, function(tag, message) {
+            ngToast.warning(message + ' ' + tag.Name);
+        });
+
     }
   };
 
@@ -66,7 +78,7 @@ autocv.controller('EditCtrl', function($scope, $http, $state, $stateParams, ngTo
   };
 
   $scope.tags = function() {
-    return _.difference(tagService.allTagNames(), _.map($scope.person.Tags, function(tag) {
+    return _.difference(TagService.allTagNames(), _.map($scope.person.Tags, function(tag) {
       return tag.Name;
     }));
   };
