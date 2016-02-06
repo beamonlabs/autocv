@@ -7,18 +7,19 @@ import (
   "log"
   "net/http"
   "github.com/gorilla/mux"
-  "github.com/garyburd/redigo/redis"
+  "gopkg.in/mgo.v2"
+  "gopkg.in/mgo.v2/bson"
 )
 
 type Tag struct  {
-  Name string
+  Name string `bson:"_id"`
   Description string
 }
 
 type Tags []Tag
 
 type Project struct {
-  Id string
+  Id string `bson:"_id"`
   Name string
   Description string
   Tags Tags
@@ -28,7 +29,7 @@ type Projects []Project
 
 type Person struct {
   Name string
-  Email string
+  Email string `bson:"_id"`
   Info string
   Projects Projects
   Tags Tags
@@ -67,8 +68,8 @@ func deletePersonHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func DeletePersonByEmail(email string) {
-  Execute(func(session redis.Conn) {
-    err := session.Do("LREM", email)
+  Execute(func(session *mgo.Session) {
+    err := session.DB("autocv").C("person").Remove(bson.M{"Email": email})
     if err != nil {
       panic(err)
     }
@@ -141,30 +142,24 @@ func postPersonHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func GetPersonByEmail(email string) Person {
-  var persons []Person
-  Execute(func(session redis.Conn) {
-    persons, err := session.Do("GET", "persons")
+  result := Person{}
+
+  Execute(func(session *mgo.Session) {
+    all := session.DB("autocv").C("person")
+    err := all.Find(bson.M{"_id": email}).One(&result)
     if err != nil {
       panic(err)
     }
   })
-  return persons[SliceIndex(len(persons), func(i int) bool { return persons[i].Email == email })];
-}
 
-
-func SliceIndex(limit int, predicate func(i int) bool) int {
-    for i := 0; i < limit; i++ {
-        if predicate(i) {
-            return i
-        }
-    }
-    return -1
+  return result;
 }
 
 func GetAllTags() Tags {
   var tags Tags
-  Execute(func(session redis.Conn) {
-    tags, err := session.Do("GET", "tags")
+  Execute(func(session *mgo.Session) {
+    all := session.DB("autocv").C("tag")
+    err := all.Find(nil).All(&tags)
     if err != nil {
       panic(err)
     }
@@ -173,18 +168,16 @@ func GetAllTags() Tags {
 }
 
 func StoreTag(tag Tag) {
-  Execute(func(session redis.Conn) {
-    _, err := session.DO("RPUSH", "tags", tag)
-    if err != null {
-        panic(err)
-     }
+  Execute(func(session *mgo.Session) {
+    session.DB("autocv").C("tag").UpsertId(tag.Name, tag)
   })
 }
 
 func GetAllPeople() Persons {
   var persons Persons
-  Execute(func(session redis.Conn) {
-    persons, err := session.Do("GET", "persons")
+  Execute(func(session *mgo.Session) {
+    all := session.DB("autocv").C("person")
+    err := all.Find(nil).All(&persons)
     if err != nil {
       panic(err)
     }
@@ -193,24 +186,19 @@ func GetAllPeople() Persons {
 }
 
 func StorePerson(person Person) {
-  Execute(func(session redis.Conn) {
-    _, err := session.Do("HSET", person.Email, person)
-    if err != null {
-        panic(err)
-     }
+  Execute(func(session *mgo.Session) {
+    session.DB("autocv").C("person").UpsertId(person.Email, person)
   })
 }
 
-func Execute(fn func(session redis.Conn)) {
+func Execute(fn func(session *mgo.Session)) {
   session := GetSession();
   defer session.Close()
   fn(session);
 }
 
-//func GetSession() *mgo.Session {
-//  session, err := mgo.Dial("localhost")
-func GetSession() redis.Conn{
-  session, err := redis.Dial("tcp", "redis:7379")
+func GetSession() *mgo.Session {
+  session, err := mgo.Dial("localhost")
   if err != nil {
     panic(err)
   }
