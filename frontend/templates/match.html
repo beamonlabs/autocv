@@ -1,0 +1,41 @@
+<div class="page-header">
+  <h1>Kompetensmatchning</h1>
+</div>
+<div class="container">
+  <h3>Kompetenser som någon kan lära ut</h3>
+  <div class="panel panel-default" ng-repeat="tag in tagsWithTeachers">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{ tag.tag }}</h3>
+    </div>
+    <div class="panel-body">
+      Kan lära ut
+      <div class="row" ng-repeat="teacher in tag.teachers">
+        {{ teacher.Name }}
+        |
+        {{ teacher.Email }}
+      </div>
+      Vill lära sig
+      <div class="row" ng-repeat="student in tag.students">
+        {{ student.Name }}
+        |
+        {{ student.Email }}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <h3>Kompetenser folk vill lära sig men som saknar lärare</h3>
+  <div class="panel panel-default" ng-repeat="tag in tagsWithoutTeachers">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{ tag.tag }}</h3>
+    </div>
+    <div class="panel-body">
+      Vill lära sig
+      <div class="row" ng-repeat="student in tag.students">
+        {{ student.Name }}
+        |
+        {{ student.Email }}
+      </div>
+    </div>
+  </div>
+</div>

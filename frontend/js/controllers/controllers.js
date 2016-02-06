@@ -26,8 +26,4 @@ angular.module('autocv').controller('PeopleCtrl',
 
 .controller('TagsCtrl', function($scope, $http, $state, TagService) {
   $scope.tags = [];
-})
-
-.controller('MatchCtrl', function($scope, $http, $state, TagService) {
-  $scope.someData = {};
 });

@@ -19,7 +19,7 @@ angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, 
     if (typeof(person.TeachingSkills) === 'undefined' || person.TeachingSkills === null) {
       person.TeachingSkills = [];
     }
-  }
+  };
 
   if (typeof($stateParams.email) !== 'undefined') {
     $http.get('api/people/' + $stateParams.email)
@@ -37,13 +37,13 @@ angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, 
 
   self.addTagToArea = function(tag, area) {
     if (area === 'teach') {
-      if (!_.contains($scope.person.TeachingSkills, tag)) {
+      if (!_.some($scope.person.TeachingSkills, tag)) {
         $scope.person.TeachingSkills.push(tag);
         ngToast.create(tag.Name + ' tillagt till det du kan lära ut!');
       }
     }
     if (area === 'learn') {
-      if (!_.contains($scope.person.WantedSkills, tag)) {
+      if (!_.some($scope.person.WantedSkills, tag)) {
         $scope.person.WantedSkills.push(tag);
         ngToast.create(tag.Name + ' tillagt till det du vill lära dig!');
       }
@@ -69,7 +69,7 @@ angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, 
     }
   };
 
-  self.removeTagFromArea = function(tag, area) {
+  self.removeTagFromArea = function(tagToRemove, area) {
     if (area === 'teach') {
       $scope.person.TeachingSkills = _.reject($scope.person.TeachingSkills, function(tag) {
         return tag.Name == tagToRemove.Name;
