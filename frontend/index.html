@@ -21,11 +21,19 @@
 <body ng-app="autocv">
 <toast></toast>
 <div class="container">
-  <div class="container">
-    <h1>Beamon People Auto CV</h1>
-    <p>Det här kommer bli awesome</p>
+  <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#/people">B</a>
+      <ul class="nav navbar-nav">
+        <li><a href="#/people">People</a></li>
+        <li><a href="#/tags">Kompetensmolnet</a></li>
+        <li><a href="#/match">Matchning</a></li>
+      </ul>
+    </div>
   </div>
-  <div class="container" ui-view>
+</nav>
+  <div class="container-fluid" ui-view>
   </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
