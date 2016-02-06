@@ -23,7 +23,7 @@
       <div class="form-group col-md-5">
         <label for="tagFind">Hitta saker att lära ut</label>
         <input type="text" class="form-control" id="tagTeach" ng-keyup="keyUp($event)" ng-model="tagName"/>
-        <div ng-repeat="tag in teachTags() | filter:tagName">
+        <div ng-repeat="tag in availableTagNames() | filter:tagName">
           <button class="btn btn-info btn-sm" type="button" ng-click="addTag(tag, 'teach')">
             {{ tag }}
             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
@@ -49,7 +49,7 @@
       <div class="form-group col-md-5">
         <label for="tagFind">Hitta kompetens</label>
         <input type="text" class="form-control" id="tagLearn" ng-keyup="keyUp($event, 'learn')" ng-model="tagName"/>
-        <div ng-repeat="tag in learnTags() | filter:tagName">
+        <div ng-repeat="tag in availableTagNames() | filter:tagName">
           <button class="btn btn-info btn-sm" type="button" ng-click="addTag(tag, 'learn')">
             {{ tag }}
             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>

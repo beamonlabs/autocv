@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, $stateParams, ngToast, TagService, PeopleService) {
+  var self = this;
   $scope.tagName = '';
   $scope.person = {
     Tags: [],
@@ -8,10 +9,23 @@ angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, 
     TeachingSkills: []
   };
 
+  self.fixPerson = function(person) {
+    if (typeof(person.Tags) === 'undefined' || person.Tags === null) {
+      person.Tags = [];
+    }
+    if (typeof(person.WantedSkills) === 'undefined' || person.WantedSkills === null) {
+      person.WantedSkills = [];
+    }
+    if (typeof(person.TeachingSkills) === 'undefined' || person.TeachingSkills === null) {
+      person.TeachingSkills = [];
+    }
+  }
+
   if (typeof($stateParams.email) !== 'undefined') {
     $http.get('api/people/' + $stateParams.email)
       .success(function(data) {
         $scope.person = data;
+        self.fixPerson($scope.person);
       }).error(function(msg, code) {
         ngToast.warning('Could not load ' + $stateParams.email);
       });
@@ -21,20 +35,31 @@ angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, 
     //Do nothing?
   };
 
+  self.addTagToArea = function(tag, area) {
+    if (area === 'teach') {
+      if (!_.contains($scope.person.TeachingSkills, tag)) {
+        $scope.person.TeachingSkills.push(tag);
+        ngToast.create(tag.Name + ' tillagt till det du kan lära ut!');
+      }
+    }
+    if (area === 'learn') {
+      if (!_.contains($scope.person.WantedSkills, tag)) {
+        $scope.person.WantedSkills.push(tag);
+        ngToast.create(tag.Name + ' tillagt till det du vill lära dig!');
+      }
+    }
+  };
+
   $scope.addTag = function(tagName, area) {
     if (tagName.length > 1) {
       TagService.save(tagName)
         .then(function(tag) {
-          ngToast.create(tag.Name + ' added to your skills!');
-          if (!_.contains($scope.person.Tags, tag)) {
-            $scope.person.Tags.push(tag);
-            $scope.tagName = '';
-          }
+          self.addTagToArea(tag, area);
         }, function(tag, message) {
           ngToast.warning(message + ' ' + tag.Name);
         });
-
     }
+    $scope.tagName = '';
   };
 
   $scope.keyUp = function(event, area) {
@@ -44,7 +69,7 @@ angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, 
     }
   };
 
-  $scope.removeTag = function(tagToRemove, area) {
+  self.removeTagFromArea = function(tag, area) {
     if (area === 'teach') {
       $scope.person.TeachingSkills = _.reject($scope.person.TeachingSkills, function(tag) {
         return tag.Name == tagToRemove.Name;
@@ -57,22 +82,23 @@ angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, 
     }
   };
 
-  $scope.teachTags = function() {
-    return _.difference(TagService.allTagNames(), _.map($scope.person.TeachingSkills, function(tag) {
+  $scope.removeTag = function(tagToRemove, area) {
+    self.removeTagFromArea(tagToRemove, area);
+  };
+
+  $scope.availableTagNames = function() {
+    return _.difference(TagService.allTagNames(), _.union(_.map($scope.person.TeachingSkills, function(tag) {
+      return tag.Name;
+    }), _.map($scope.person.WantedSkills, function(tag) {
+      return tag.Name;
+    })));
+  };
+
+  $scope.tags = function() {
+    return _.difference(TagService.allTagNames(), _.map($scope.person.Tags, function(tag) {
       return tag.Name;
     }));
   };
-
-  $scope.learnTags = function() {
-    return _.difference(TagService.allTagNames(), _.map($scope.person.WantedSkills, function(tag) {
-      return tag.Name;
-    }));
-  };
-
-  return _.difference(TagService.allTagNames(), _.map($scope.person.Tags, function(tag) {
-    return tag.Name;
-  }));
-  $scope.tags = function() {};
 
   $scope.save = function() {
     $http.post('api/people/', $scope.person).success(function(msg, code) {
