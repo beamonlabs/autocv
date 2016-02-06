@@ -6,7 +6,7 @@ angular.module('autocv').service('TagService', function tagService($http, $q) {
     self.getTags = function() {
     	var deferred = $q.defer();
 		$http({ method: 'GET', url: url }).
-            success(function (data, status, headers, config) {	
+            success(function (data, status, headers, config) {
                 if(data !== null) {
                     self.tags = data;
                 }
@@ -14,7 +14,7 @@ angular.module('autocv').service('TagService', function tagService($http, $q) {
             }).
             error(function(data, status, headers, config) {
                 deferred.reject(status);
-            });        
+            });
 		return deferred.promise;
     };
 
@@ -29,7 +29,7 @@ angular.module('autocv').service('TagService', function tagService($http, $q) {
     };
 
     self.save = function(tagName) {
-        
+
         var deferred = $q.defer();
         var tag = { Name: tagName };
         self.getTags().then(function() {
@@ -48,8 +48,8 @@ angular.module('autocv').service('TagService', function tagService($http, $q) {
         });
         return deferred.promise;
     };
-    
+
     self.getTags();
-    
+
     return self;
 });
