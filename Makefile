@@ -22,10 +22,13 @@ bower:
 	cd frontend; bower --allow-root install
 
 run: mainimage
-	sudo docker run --rm --link mongo -p 8080:8080 --name autocv autocv
+	sudo docker run --rm --link redis -p 8080:8080 --name autocv autocv
 
 runmongo:
 	sudo docker run -d --restart=always --name mongo -p 27030:27017 mvertes/alpine-mongo
+
+runredis:
+	sudo docker run -d --restart=always --name redis -p 6379:6379 faisyl/alpine-redis
 
 install_dev:
 	sudo apt-get install -y nodejs npm
