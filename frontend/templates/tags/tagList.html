@@ -10,65 +10,49 @@
       <th>
         Beskrivning
       </th>
-      <th>
+      <!-- <th>
         Lärare
       </th>
       <th>
         Studenter
-      </th>
+      </th> -->
     </thead>
     <tbody>
-      <tr ng-repeat="tag in tags" class="clickable">
-        <td ng-if="!tag.editing" ng-click="edit(tag)">
-          {{ tag.Name }}
-        </td>
-        <td ng-if="!tag.editing" ng-click="edit(tag)">
-          {{ tag.Description }}
-        </td>
-        <td ng-if="!tag.editing" ng-click="edit(tag)">
-          {{ tag.teachers }}
-        </td>
-        <td ng-if="!tag.editing" ng-click="edit(tag)">
-          {{ tag.students }}
-        </td>
-        <td colspan="4" ng-if="tag.editing">
-          <form>
-            <div class="form-group">
-              <label for="name">Kompetensnamn:</label>
-              <input type="text" id="name" class="form-control" ng-model="tag.Name"/>
-            </div>
-            <div class="form-group">
-              <label for="description">Beskrivning</label>
-              <textarea class="form-control" ng-model="tag.Description" rows="5" autofocus></textarea>
-            </div>
-            <input type="button" ng-click="save(tag)" value="Spara"/>&nbsp;<input type="button" ng-click="edit(tag)" value="Avbryt"/>
-          </form>
-        </td>
+      <tr ng-repeat="tag in tags" class="clickable" ng-include="getTemplate(tag)">
+
+
       </tr>
     </tbody>
   </table>
-
-  <!-- <div class="row" ng-repeat="tag in tags">
-    <div class="container clickable" ng-if="!tag.editing" ng-click="edit(tag)" ng>
-      <div class="col-md-4">
-        {{ tag.Name}}
-      </div>
-      <div>
-        {{ tag.Description }}
-      </div>
-    </div>
-    <div class="container" ng-if="tag.editing">
-      <form>
-        <div class="form-group">
-          <label for="name">Kompetensnamn:</label>
-          <inpu ngt type="text" id="name" class="form-control" ng-model="tag.Name" />
-        </div>
-        <div class="form-group">
-          <label for="description">Beskrivning</label>
-          <textarea class="form-control" ng-model="tag.Description" rows="5"></textarea>
-        </div>
-        <input type="button" ng-click="save(tag)" text="Spara" />&nbsp;<input type="button" ng-click="edit(tag)" text="Avbryt"/>
-      </form>
-    </div> -->
-  <!-- </div> -->
 </div>
+
+<script type="text/ng-template" id="tagView">
+  <td ng-if="!tag.editing" ng-click="edit(tag)">
+    {{ tag.Name }}
+  </td>
+  <td ng-if="!tag.editing" ng-click="edit(tag)">
+    {{ tag.Description }}
+  </td>
+  <!-- <td ng-if="!tag.editing" ng-click="edit(tag)">
+    {{ tag.teachers }}
+  </td>
+  <td ng-if="!tag.editing" ng-click="edit(tag)">
+    {{ tag.students }}
+  </td> -->
+</script>
+
+<script type="text/ng-template" id="tagEdit">
+  <td colspan="2" ng-if="tag.editing">
+    <form>
+      <div class="form-group">
+        <label for="name">Kompetensnamn:</label>
+        <input type="text" id="name" class="form-control" ng-model="tag.Name"/>
+      </div>
+      <div class="form-group">
+        <label for="description">Beskrivning</label>
+        <textarea class="form-control" ng-model="tag.Description" rows="5" autofocus></textarea>
+      </div>
+      <input type="button" ng-click="save(tag)" value="Spara"/>&nbsp;<input type="button" ng-click="edit(tag)" value="Avbryt"/>
+    </form>
+  </td>
+</script>

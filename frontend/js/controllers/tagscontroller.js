@@ -32,4 +32,12 @@ angular.module('autocv').controller('TagsCtrl', function($scope, $http, $state, 
     });
   };
 
+$scope.getTemplate = function(tag) {
+  if(tag.editing) {
+    return 'tagEdit';
+  }
+  return 'tagView';
+};
+
+
 });
