@@ -22,7 +22,7 @@
       <!-- Stuff I can teach -->
       <div class="form-group col-md-5">
         <label for="tagFind">Hitta saker att lära ut</label>
-        <input type="text" class="form-control" id="tagTeach" ng-keyup="keyUp($event)" ng-model="tagName"/>
+        <input type="text" class="form-control" id="tagTeach" ng-keyup="keyUp($event, 'teach')" ng-model="tagName"/>
         <div ng-repeat="tag in availableTagNames() | filter:tagName">
           <button class="btn btn-info btn-sm" type="button" ng-click="addTag(tag, 'teach')">
             {{ tag }}

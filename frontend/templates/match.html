@@ -8,17 +8,13 @@
       <h3 class="panel-title">{{ tag.tag }}</h3>
     </div>
     <div class="panel-body">
-      Kan lära ut
-      <div class="row" ng-repeat="teacher in tag.teachers">
-        {{ teacher.Name }}
-        |
-        {{ teacher.Email }}
+      <h4>Personer som kan lära ut</h4>
+      <div ng-repeat="teacher in tag.teachers">
+        <p>{{ teacher.Name }} <a href="#/edit/{{ teacher.Email }}">{{ teacher.Email }}</a></p>
       </div>
-      Vill lära sig
-      <div class="row" ng-repeat="student in tag.students">
-        {{ student.Name }}
-        |
-        {{ student.Email }}
+      <h4>Personer som vill lära sig</h4>
+      <div ng-repeat="student in tag.students">
+        <p>{{ student.Name }} <a href="#/edit/{{ student.Email }}">{{ student.Email }}</a></p>
       </div>
     </div>
   </div>
@@ -31,10 +27,8 @@
     </div>
     <div class="panel-body">
       Vill lära sig
-      <div class="row" ng-repeat="student in tag.students">
-        {{ student.Name }}
-        |
-        {{ student.Email }}
+      <div ng-repeat="student in tag.students">
+        <p>{{ student.Name }} <a href="#/edit/{{ student.Email }}">{{ student.Email }}</a></p>
       </div>
     </div>
   </div>
