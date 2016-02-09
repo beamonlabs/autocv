@@ -31,12 +31,31 @@ angular.module('autocv').service('TagService', function tagService($http, $q) {
     return _.some(self.allTagNames(), tagName);
   };
 
-  self.save = function(tagName) {
+  self.saveTag = function(tag) {
+    var deferred = $q.defer();
+    self.getTags().then(function() {
+
+      $http.post('/api/tags/', tag)
+        .success(function(msg, code) {
+          self.tags.push(tag);
+        })
+        .error(function() {
+          deferred.reject('Could not save tag ' + tag.Name);
+        });
+      deferred.resolve(tag);
+    }, function() {
+      deferred.reject('Could not get list of tags');
+    });
+    return deferred.promise;
+  };
+
+  self.save = function(tagName, area) {
 
     var deferred = $q.defer();
     var tag = {
       Name: tagName
     };
+
     self.getTags().then(function() {
       if (!self.tagExists(tagName)) {
         $http.post('/api/tags/', tag)
@@ -44,12 +63,12 @@ angular.module('autocv').service('TagService', function tagService($http, $q) {
             self.tags.push(tag);
           })
           .error(function() {
-            deferred.reject(tag, 'Could not save tag');
+            deferred.reject('Could not save tag ' + tag.Name);
           });
-      };
+      }
       deferred.resolve(tag);
     }, function() {
-      deferred.reject(tag, 'Could not get list of tags');
+      deferred.reject(tag, 'Could not get list of tags ' + tag.Name);
     });
     return deferred.promise;
   };

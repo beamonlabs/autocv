@@ -86,6 +86,8 @@ angular.module('autocv').service('MatchService', function matchService($http, $q
   };
 
   return {
-    getMatchData: self.getMatchData
+    getMatchData: self.getMatchData,
+    findTeachersWithTag: self.findTeachersWithTag,
+    findPeopleWantingTag: self.findPeopleWantingTag
   };
 });

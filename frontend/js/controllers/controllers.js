@@ -22,8 +22,4 @@ angular.module('autocv').controller('PeopleCtrl',
         "email": email
       });
     };
-  })
-
-.controller('TagsCtrl', function($scope, $http, $state, TagService) {
-  $scope.tags = [];
-});
+  });

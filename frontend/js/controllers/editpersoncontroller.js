@@ -52,7 +52,7 @@ angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, 
 
   $scope.addTag = function(tagName, area) {
     if (tagName.length > 1) {
-      TagService.save(tagName)
+      TagService.save(tagName, area)
         .then(function(tag) {
           self.addTagToArea(tag, area);
         }, function(tag, message) {
