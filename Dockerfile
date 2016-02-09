@@ -15,7 +15,7 @@ RUN 	echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/reposi
 	npm install -g bower && \
 	mkdir -p /root/frontend $GOPATH/bin $GOPATH/src
 
-COPY main.sh /etc/profile.d
+COPY main.sh /etc/profile.d/
 COPY frontend /root/frontend
 COPY main.go start.sh Makefile /root/
 
