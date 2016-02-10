@@ -1,27 +1,24 @@
-FROM hypriot/rpi-golang:latest
+FROM alpine
 
 WORKDIR /root
 
-RUN 	apt-get update && \
-	apt-get install -y curl
-
-RUN curl -sL https://deb.nodesource.com/setup | bash -
-RUN apt-get update && apt-get install -y nodejs
-RUN npm install -g --allow-root npm@latest
-RUN npm install -g --allow-root bower
-
 EXPOSE 8080
 
-CMD /root/main
+CMD /root/start.sh
 
-RUN mkdir -p $GOROOT/bin $GOROOT/src
-ENV GOBIN $GOROOT/bin
+ENV GOPATH $HOME/gohome
+ENV GOBIN $HOME/gohome/bin
 
-COPY main.sh /etc/profile.d
+RUN 	echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+	apk update && \
+	apk add bash go nodejs git make python && \
+	npm install -g bower && \
+	mkdir -p /root/frontend $GOPATH/bin $GOPATH/src
 
-RUN mkdir -p /root/frontend
+COPY main.sh /etc/profile.d/
 COPY frontend /root/frontend
-COPY main.go Makefile /root/
+COPY main.go start.sh Makefile /root/
 
-RUN  make main
-
+RUN	make main && \
+	apk del git python make && \
+	rm -rf /var/cache/apk/* /root/Makefile /root/main.go

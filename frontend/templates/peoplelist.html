@@ -1,8 +1,7 @@
 <div class="page-header">
   <h1>Alla Beamon People</h1>
 </div>
-<div class="row">
-  <div class="col-md-6">
+<div class="container">
     <table class="table">
       <thead>
         <tr>
@@ -13,13 +12,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="person in people" ng-click="editPerson(person.Id)">
-          <td>{{ person.Id }}</td>
+        <tr ng-repeat="person in people" ng-click="editPerson(person.Email)">
+          <td>{{ person.Email }}</td>
           <td>{{ person.Name }}</td>
           <td>{{ person.Info }}</td>
-          <td><button class="btn btn-danger btn-xs" ng-click="deletePerson(person.Id)">x</button>
+          <td><button class="btn btn-danger btn-xs" ng-click="deletePerson(person.Email)">x</button>
         </tr>
       </tbody>
     </table>
-  </div>
+    <a class="btn btn-success btn-large" href="#/add">ny person</a>
 </div>
