@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('autocv').controller('PeopleCtrl',
+angular.module('autocv').controller('ListPeopleCtrl',
   function($scope, $http, $state, ngToast, PeopleService) {
     $scope.people = [];
 

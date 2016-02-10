@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, $stateParams, ngToast, TagService, PeopleService) {
+angular.module('autocv').controller('EditPersonCtrl', function($scope, $http, $state, $stateParams, ngToast, TagService, PeopleService) {
   var self = this;
 
   $scope.learnFilter = '';
