@@ -8,21 +8,21 @@ var autocv = angular.module('autocv', ['ui.router', 'ngToast'])
       .state('home', {
         url: "/home",
         templateUrl: "templates/peoplelist.html",
-        controller: "PeopleCtrl"
+        controller: "ListPeopleCtrl"
       })
       .state('edit', {
         url: "/edit/:email",
         templateUrl: "templates/editperson.html",
-        controller: "EditCtrl"
+        controller: "EditPersonCtrl"
       })
       .state('add', {
         url: "/add",
         templateUrl: "templates/editperson.html",
-        controller: "EditCtrl"
+        controller: "EditPersonCtrl"
       })
       .state('tags', {
         url: "/tags",
-        templateUrl: "templates/tags/tagList.html",
+        templateUrl: "templates/tagList.html",
         controller: "TagsCtrl"
       })
       .state('match', {

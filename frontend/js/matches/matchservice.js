@@ -5,12 +5,6 @@ angular.module('autocv').service('MatchService', function matchService($http, $q
 
   self.people = [];
 
-  // TagService.getTags().then(function(data) {
-  //   self.tags = data;
-  // }, function(status) {
-  //   //Wut?
-  // });
-
   self.findTeachersWithTag = function(tagName) {
     var teachers = _.filter(self.people, function(person) {
       return _.some(person.TeachingSkills, function(tag) {
