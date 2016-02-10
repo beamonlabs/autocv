@@ -1,6 +1,6 @@
 'use strict';
 
-var autocv = angular.module('autocv', ['ui.router', 'ngToast'])
+var autocv = angular.module('autocv', ['ui.router', 'ngToast', 'tagfilters'])
   .config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/home");
 
