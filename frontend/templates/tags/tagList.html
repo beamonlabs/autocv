@@ -1,0 +1,58 @@
+<div class="page-header">
+  <h1>Alla Kompetenser</h1>
+</div>
+<div class="container">
+  <table class="table table-striped table-hover">
+    <thead>
+      <th>
+        Kompetens
+      </th>
+      <th>
+        Beskrivning
+      </th>
+      <!-- <th>
+        Lärare
+      </th>
+      <th>
+        Studenter
+      </th> -->
+    </thead>
+    <tbody>
+      <tr ng-repeat="tag in tags" class="clickable" ng-include="getTemplate(tag)">
+
+
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script type="text/ng-template" id="tagView">
+  <td ng-if="!tag.editing" ng-click="edit(tag)">
+    {{ tag.Name }}
+  </td>
+  <td ng-if="!tag.editing" ng-click="edit(tag)">
+    {{ tag.Description }}
+  </td>
+  <!-- <td ng-if="!tag.editing" ng-click="edit(tag)">
+    {{ tag.teachers }}
+  </td>
+  <td ng-if="!tag.editing" ng-click="edit(tag)">
+    {{ tag.students }}
+  </td> -->
+</script>
+
+<script type="text/ng-template" id="tagEdit">
+  <td colspan="2" ng-if="tag.editing">
+    <form>
+      <div class="form-group">
+        <label for="name">Kompetensnamn:</label>
+        <input type="text" id="name" class="form-control" ng-model="tag.Name"/>
+      </div>
+      <div class="form-group">
+        <label for="description">Beskrivning</label>
+        <textarea class="form-control" ng-model="tag.Description" rows="5" autofocus></textarea>
+      </div>
+      <input type="button" ng-click="save(tag)" value="Spara"/>&nbsp;<input type="button" ng-click="edit(tag)" value="Avbryt"/>
+    </form>
+  </td>
+</script>
