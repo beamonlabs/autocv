@@ -22,8 +22,8 @@
       <!-- Stuff I can teach -->
       <div class="form-group col-md-5">
         <label for="tagFind">Hitta saker att lära ut</label>
-        <input type="text" class="form-control" id="tagTeach" ng-keyup="keyUp($event, 'teach')" ng-model="tagName"/>
-        <div ng-repeat="tag in availableTagNames() | filter:tagName">
+        <input type="text" class="form-control" id="tagTeach" ng-keyup="keyUpTeach($event)" ng-model="teachFilter"/>
+        <div ng-repeat="tag in availableTagNames() | filter:teachFilter">
           <button class="btn btn-info btn-sm" type="button" ng-click="addTag(tag, 'teach')">
             {{ tag }}
             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
@@ -48,8 +48,8 @@
       <!-- Stuff I can teach -->
       <div class="form-group col-md-5">
         <label for="tagFind">Hitta kompetens</label>
-        <input type="text" class="form-control" id="tagLearn" ng-keyup="keyUp($event, 'learn')" ng-model="tagName"/>
-        <div ng-repeat="tag in availableTagNames() | filter:tagName">
+        <input type="text" class="form-control" id="tagLearn" ng-keyup="keyUpLearn($event)" ng-model="learnFilter"/>
+        <div ng-repeat="tag in availableTagNames() | filter:learnFilter">
           <button class="btn btn-info btn-sm" type="button" ng-click="addTag(tag, 'learn')">
             {{ tag }}
             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>

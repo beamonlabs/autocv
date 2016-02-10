@@ -2,7 +2,10 @@
 
 angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, $stateParams, ngToast, TagService, PeopleService) {
   var self = this;
-  $scope.tagName = '';
+
+  $scope.learnFilter = '';
+  $scope.teachFilter = '';
+
   $scope.person = {
     Tags: [],
     WantedSkills: [],
@@ -69,6 +72,20 @@ angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, 
     }
   };
 
+  $scope.keyUpTeach = function(event) {
+    if (event.keyCode === 13) {
+      $scope.addTag($scope.teachFilter, 'teach');
+      $scope.teachFilter = '';
+    }
+  };
+
+  $scope.keyUpLearn = function(event) {
+    if (event.keyCode === 13) {
+      $scope.addTag($scope.learnFilter, 'learn');
+      $scope.learnFilter = '';
+    }
+  };
+
   self.removeTagFromArea = function(tagToRemove, area) {
     if (area === 'teach') {
       $scope.person.TeachingSkills = _.reject($scope.person.TeachingSkills, function(tag) {
@@ -81,6 +98,7 @@ angular.module('autocv').controller('EditCtrl', function($scope, $http, $state, 
       });
     }
   };
+
 
   $scope.removeTag = function(tagToRemove, area) {
     self.removeTagFromArea(tagToRemove, area);
