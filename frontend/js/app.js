@@ -22,7 +22,7 @@ var autocv = angular.module('autocv', ['ui.router', 'ngToast'])
       })
       .state('tags', {
         url: "/tags",
-        templateUrl: "templates/tags/tagList.html",
+        templateUrl: "templates/tagList.html",
         controller: "TagsCtrl"
       })
       .state('match', {
