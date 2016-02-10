@@ -1,6 +1,6 @@
-pushall: pushmainimage
-
 all: mainimage
+
+pushall: pushmainimage
 
 pushmainimage: mainimage
 	sudo docker tag -f autocv beamonlabs/autocv:$(BRANCH)
