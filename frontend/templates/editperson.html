@@ -16,57 +16,53 @@
     <textarea class="form-control" rows="3" id="info" ng-model="person.Info"></textarea>
   </div>
 
-    <div class="row">
-      <h4>Saker jag kan lära ut</h4>
-      <!-- Stuff I can teach -->
-      <div class="form-group col-md-5">
-        <label for="tagFind">Hitta saker att lära ut</label>
-        <input type="text" class="form-control" id="tagTeach" ng-keyup="keyUpTeach($event)" ng-model="teachFilter"/>
-        <div ng-repeat="tag in availableTagNames() | filter:teachFilter">
-          <button class="btn btn-info btn-sm" type="button" ng-click="addTag(tag, 'teach')">
-            {{ tag }}
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-            <br/>
-          </button>
-        </div>
-      </div>
-      <div class="form-group col-md-5">
-        <label>Saker jag kan lära ut</label>
-        <div ng-repeat="tag in person.TeachingSkills">
-          <button class="btn btn-info btn-sm" type="button" ng-click="removeTag(tag, 'teach')">
-            {{ tag.Name }}
-            <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
-          </button>
-          <br/>
-        </div>
-      </div>
-
+  <!-- Stuff I can teach -->
+  <div class="form-group">
+    <h4>Saker jag kan lära ut</h4>
+    <label for="tagFind">Hitta saker att lära ut</label>
+    <input type="text" class="form-control" id="tagTeach" ng-keyup="keyUpTeach($event)" ng-model="teachFilter"/>
+    <div ng-repeat="tag in availableTagNames() | filter:teachFilter">
+      <button class="btn btn-info btn-sm" type="button" ng-click="addTag(tag, 'teach')">
+        {{ tag }}
+        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+        <br/>
+      </button>
     </div>
-    <div class="row">
-      <h4>Saker jag vill lära mig</h4>
-      <!-- Stuff I can teach -->
-      <div class="form-group col-md-5">
-        <label for="tagFind">Hitta kompetens</label>
-        <input type="text" class="form-control" id="tagLearn" ng-keyup="keyUpLearn($event)" ng-model="learnFilter"/>
-        <div ng-repeat="tag in availableTagNames() | filter:learnFilter">
-          <button class="btn btn-info btn-sm" type="button" ng-click="addTag(tag, 'learn')">
-            {{ tag }}
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-          </button>
-          <br/>
-        </div>
+  </div>
+  <div class="form-group">
+    <label>Saker jag kan lära ut</label>
+    <div class="row" ng-repeat="row in person.TeachingSkills | chunk:4">
+      <div class="col-md-2 text-center" ng-repeat="tag in row">
+        <button class="btn btn-info btn-sm" type="button" ng-click="removeTag(tag, 'teach')">
+          {{ tag.Name }}
+          <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+        </button>
       </div>
-      <div class="form-group col-md-5">
-        <label>Det här vill jag lära mig</label>
-        <div ng-repeat="tag in person.WantedSkills">
-          <button class="btn btn-info btn-sm" type="button" ng-click="removeTag(tag, 'learn')">
-            {{ tag.Name }}
-            <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
-          </button>
-          <br/>
-        </div>
-      </div>
-
     </div>
+  </div>
+
+  <!-- Stuff I can teach -->
+  <div class="form-group">
+    <h4>Saker jag vill lära mig</h4>
+    <label for="tagFind">Hitta kompetens</label>
+    <input type="text" class="form-control" id="tagLearn" ng-keyup="keyUpLearn($event)" ng-model="learnFilter"/>
+    <div ng-repeat="tag in availableTagNames() | filter:learnFilter">
+      <button class="btn btn-info btn-sm" type="button" ng-click="addTag(tag, 'learn')">
+        {{ tag }}
+        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Det här vill jag lära mig</label>
+    <div class="row" ng-repeat="row in person.WantedSkills | chunk:4">
+      <div class="col-md-2 text-center" ng-repeat="tag in row">
+        <button class="btn btn-info btn-sm" type="button" ng-click="removeTag(tag, 'learn')">
+          {{ tag.Name }}
+          <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </div>
   <button type="button" class="btn btn-success" ng-click="save()">Spara</button>
 </form>

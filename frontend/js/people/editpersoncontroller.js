@@ -6,33 +6,14 @@ angular.module('autocv').controller('EditPersonCtrl', function($scope, $http, $s
   $scope.learnFilter = '';
   $scope.teachFilter = '';
 
-  $scope.person = {
-    Tags: [],
-    WantedSkills: [],
-    TeachingSkills: []
-  };
+  $scope.person={};
 
-  self.fixPerson = function(person) {
-    if (typeof(person.Tags) === 'undefined' || person.Tags === null) {
-      person.Tags = [];
-    }
-    if (typeof(person.WantedSkills) === 'undefined' || person.WantedSkills === null) {
-      person.WantedSkills = [];
-    }
-    if (typeof(person.TeachingSkills) === 'undefined' || person.TeachingSkills === null) {
-      person.TeachingSkills = [];
-    }
-  };
-
-  if (typeof($stateParams.email) !== 'undefined') {
-    $http.get('api/people/' + $stateParams.email)
-      .success(function(data) {
-        $scope.person = data;
-        self.fixPerson($scope.person);
-      }).error(function(msg, code) {
-        ngToast.warning('Could not load ' + $stateParams.email);
-      });
-  }
+  PeopleService.getPerson($stateParams.email)
+    .then(function(data) {
+      $scope.person = data;
+    }, function(message) {
+      ngToast.warning(message);
+    });
 
   $scope.submit = function() {
     //Do nothing?
