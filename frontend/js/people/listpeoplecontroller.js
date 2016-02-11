@@ -5,10 +5,10 @@ angular.module('autocv').controller('ListPeopleCtrl',
     $scope.people = [];
 
     PeopleService.getPeople()
-      .then(function(data) {
-        $scope.people = data;
-      }, function(status) {
-        ngToast.warning('Could not load folks :' + status);
+      .then(function(response) {
+        $scope.people = response.data;
+      }, function(response) {
+        ngToast.warning('Could not load folks :' + response.status);
       });
 
     $scope.deletePerson = function(email) {

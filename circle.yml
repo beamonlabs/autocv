@@ -17,10 +17,10 @@ deployment:
   prod:
     branch: master
     commands:
-      - docker tag autocv beamonlabs/autocv:latest
+      - docker skill autocv beamonlabs/autocv:latest
       - docker push beamonlabs/autocv:latest
   dev: 
     branch: dev
     commands:
-      - docker tag autocv beamonlabs/autocv:dev
+      - docker skill autocv beamonlabs/autocv:dev
       - docker push beamonlabs/autocv:dev

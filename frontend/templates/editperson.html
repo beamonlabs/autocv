@@ -15,15 +15,13 @@
     <label for="info">Personlig info</label>
     <textarea class="form-control" rows="3" id="info" ng-model="person.Info"></textarea>
   </div>
-
-  <!-- Stuff I can teach -->
   <div class="form-group">
     <h4>Saker jag kan lära ut</h4>
-    <label for="tagFind">Hitta saker att lära ut</label>
-    <input type="text" class="form-control" id="tagTeach" ng-keyup="keyUpTeach($event)" ng-model="teachFilter"/>
-    <div ng-repeat="tag in availableTagNames() | filter:teachFilter">
-      <button class="btn btn-info btn-sm" type="button" ng-click="addTag(tag, 'teach')">
-        {{ tag }}
+    <label for="skillFind">Hitta saker att lära ut</label>
+    <input type="text" class="form-control" id="skillTeach" ng-keyup="keyUpTeach($event)" ng-model="teachFilter"/>
+    <div ng-repeat="skill in availableSkills() | filter: { Name: teachFilter }">
+      <button class="btn btn-info btn-sm" type="button" ng-click="addskillToArea(skill, 'teach')">
+        {{ skill.Name }}
         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
         <br/>
       </button>
@@ -31,34 +29,33 @@
   </div>
   <div class="form-group">
     <label>Saker jag kan lära ut</label>
-    <div class="row" ng-repeat="row in person.TeachingSkills | chunk:4">
-      <div class="col-md-2 text-center" ng-repeat="tag in row">
-        <button class="btn btn-info btn-sm" type="button" ng-click="removeTag(tag, 'teach')">
-          {{ tag.Name }}
+    <div class="row" ng-repeat="row in teachingSkills() | chunk:4">
+      <div class="col-md-2 text-center" ng-repeat="skill in row">
+        <button class="btn btn-info btn-sm" type="button" ng-click="removeskill(skill, 'teach')">
+          {{ skill.Name }}
           <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Stuff I can teach -->
   <div class="form-group">
     <h4>Saker jag vill lära mig</h4>
-    <label for="tagFind">Hitta kompetens</label>
-    <input type="text" class="form-control" id="tagLearn" ng-keyup="keyUpLearn($event)" ng-model="learnFilter"/>
-    <div ng-repeat="tag in availableTagNames() | filter:learnFilter">
-      <button class="btn btn-info btn-sm" type="button" ng-click="addTag(tag, 'learn')">
-        {{ tag }}
+    <label for="skillFind">Hitta kompetens</label>
+    <input type="text" class="form-control" id="skillLearn" ng-keyup="keyUpLearn($event)" ng-model="learnFilter"/>
+    <div ng-repeat="skill in availableSkills() | filter: { Name: learnFilter }">
+      <button class="btn btn-info btn-sm" type="button" ng-click="addskillToArea(skill, 'learn')">
+        {{ skill.Name }}
         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
       </button>
     </div>
   </div>
   <div class="form-group">
     <label>Det här vill jag lära mig</label>
-    <div class="row" ng-repeat="row in person.WantedSkills | chunk:4">
-      <div class="col-md-2 text-center" ng-repeat="tag in row">
-        <button class="btn btn-info btn-sm" type="button" ng-click="removeTag(tag, 'learn')">
-          {{ tag.Name }}
+    <div class="row" ng-repeat="row in wantedSkills() | chunk:4">
+      <div class="col-md-2 text-center" ng-repeat="skill in row">
+        <button class="btn btn-info btn-sm" type="button" ng-click="removeskill(skill, 'learn')">
+          {{ skill.Name }}
           <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
         </button>
       </div>

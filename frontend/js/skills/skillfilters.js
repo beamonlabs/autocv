@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('tagfilters', [])
+angular.module('SkillFilters', [])
 .filter('chunk', function() {
   return _.memoize(_.chunk);
   });

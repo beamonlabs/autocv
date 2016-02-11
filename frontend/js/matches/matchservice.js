@@ -1,51 +1,51 @@
-angular.module('autocv').service('MatchService', function matchService($http, $q, PeopleService, TagService) {
+angular.module('autocv').service('MatchService', function matchService($http, $q, PeopleService, skillservice) {
   var self = this;
   var peopleUrl = '/api/people/';
-  var tagUrl = '/api/tags/';
+  var skillUrl = '/api/skills/';
 
   self.people = [];
 
-  self.findTeachersWithTag = function(tagName) {
+  self.findTeachersWithskill = function(skillName) {
     var teachers = _.filter(self.people, function(person) {
-      return _.some(person.TeachingSkills, function(tag) {
-        return tag.Name === tagName;
+      return _.some(person.TeachingSkills, function(skill) {
+        return skill.Name === skillName;
       });
     });
     return teachers;
   };
 
-  self.findPeopleWantingTag = function(tagName) {
+  self.findPeopleWantingskill = function(skillName) {
     var students = _.filter(self.people, function(person) {
-      return _.some(person.WantedSkills, function(tag) {
-        return tag.Name === tagName;
+      return _.some(person.WantedSkills, function(skill) {
+        return skill.Name === skillName;
       });
     });
     return students;
   };
 
-  self.tagsWithTeachers = function() {
-    var tags = _.uniq(_.flatten(_.map(self.people, 'TeachingSkills')));
-    return tags;
+  self.skillsWithTeachers = function() {
+    var skills = _.uniq(_.flatten(_.map(self.people, 'TeachingSkills')));
+    return skills;
   };
 
-  self.tagsThatNeedTeachers = function() {
-    var tags = _.uniq(_.flatten(_.map(self.people, 'WantedSkills')));
-    return tags;
+  self.skillsThatNeedTeachers = function() {
+    var skills = _.uniq(_.flatten(_.map(self.people, 'WantedSkills')));
+    return skills;
   };
 
-  self.tagsThatLackTeachers = function() {
-    var diff = _.differenceWith(self.tagsThatNeedTeachers(), self.tagsWithTeachers(), function(need, has) {
+  self.skillsThatLackTeachers = function() {
+    var diff = _.differenceWith(self.skillsThatNeedTeachers(), self.skillsWithTeachers(), function(need, has) {
       return need.Name === has.Name;
     });
     return diff;
   };
 
   self.mapSkillsTeachersAndStudents = function() {
-    var stas = _.map(self.tagsWithTeachers(), function(tag) {
+    var stas = _.map(self.skillsWithTeachers(), function(skill) {
       var map = {
-        tag: tag.Name,
-        teachers: self.findTeachersWithTag(tag.Name),
-        students: self.findPeopleWantingTag(tag.Name)
+        skill: skill.Name,
+        teachers: self.findTeachersWithskill(skill.Name),
+        students: self.findPeopleWantingskill(skill.Name)
       };
       return map;
     });
@@ -53,10 +53,10 @@ angular.module('autocv').service('MatchService', function matchService($http, $q
   };
 
   self.mapSkillsAndStudents = function() {
-    var stas = _.map(self.tagsThatLackTeachers(), function(tag) {
+    var stas = _.map(self.skillsThatLackTeachers(), function(skill) {
       var map = {
-        tag: tag.Name,
-        students: self.findPeopleWantingTag(tag.Name)
+        skill: skill.Name,
+        students: self.findPeopleWantingskill(skill.Name)
       };
       return map;
     });
@@ -81,7 +81,7 @@ angular.module('autocv').service('MatchService', function matchService($http, $q
 
   return {
     getMatchData: self.getMatchData,
-    findTeachersWithTag: self.findTeachersWithTag,
-    findPeopleWantingTag: self.findPeopleWantingTag
+    findTeachersWithskill: self.findTeachersWithskill,
+    findPeopleWantingskill: self.findPeopleWantingskill
   };
 });
