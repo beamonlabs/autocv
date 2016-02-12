@@ -5,9 +5,6 @@ angular.module('autocv').controller('EditPersonCtrl', function($scope, $http, $s
   $scope.person = {};
   $scope.skills = [];
 
-  $scope.wantedSkills = [];
-  $scope.teachingSkills = [];
-
   $scope.learnFilter = '';
   $scope.teachFilter = '';
 
@@ -15,23 +12,30 @@ angular.module('autocv').controller('EditPersonCtrl', function($scope, $http, $s
   PersonService.getPerson($stateParams.email)
     .then(function(data) {
       $scope.person = data;
-      $scope.wantedSkills = $scope.person.WantedSkills;
-      $scope.teachingSkills = $scope.person.TeachingSkills;
+      chunkSkills();
     }, function(message) {
       ngToast.warning(message);
     });
 
-    SkillService.getSkills().then(function(response) {
-      $scope.skills = response.data;
-    }, function(response) {
-      ngToast.warning('Kunde inte ladda kompetenser ' + response.status);
-    });
+  SkillService.getSkills().then(function(response) {
+    $scope.skills = response.data;
+  }, function(response) {
+    ngToast.warning('Kunde inte ladda kompetenser ' + response.status);
+  });
+
+  $scope.wantedSkills = [];
+  $scope.teachingSkills = [];
+
+  var chunkSkills = function() {
+    $scope.wantedSkills = _.chunk(_.sortBy($scope.person.WantedSkills, 'Name'), 4);
+    $scope.teachingSkills = _.chunk(_.sortBy($scope.person.TeachingSkills, 'Name'), 4);
+  };
 
   //End loading data
 
   //List skills and stuff
   $scope.availableSkills = function() {
-    var availableSkills = _.differenceBy($scope.skills, _.union($scope.teachingSkills, $scope.wantedSkills), 'ID');
+    var availableSkills = _.sortBy(_.differenceBy($scope.skills, _.union($scope.person.TeachingSkills, $scope.person.WantedSkills), 'ID'), 'Name');
     return availableSkills;
   };
 
@@ -41,16 +45,25 @@ angular.module('autocv').controller('EditPersonCtrl', function($scope, $http, $s
     //Do nothing?
   };
 
-  $scope.addskillToArea = function(skill, area) {
+  $scope.addskillToArea = function(id, area) {
+    var skill = _.find($scope.skills, {
+      ID: id
+    });
+    if (typeof(skill) !== 'undefined') {
       if (area === 'teach') {
-        $scope.teachingSkills.push(skill);
+        $scope.person.TeachingSkills.push(skill);
         ngToast.create(skill.Name + ' tillagt till det du kan lära ut!');
       }
       if (area === 'learn') {
-        $scope.wantedSkills.push(skill);
+        $scope.person.WantedSkills.push(skill);
         ngToast.create(skill.Name + ' tillagt till det du vill lära dig!');
       }
+      chunkSkills();
+    } else {
+      ngToast.warning('Kunde inte hitta kompetens med id ' + id + ' för att lägga till');
+    }
   };
+
 
   //Add a new skill to the DB
   $scope.addskill = function(skillName, area) {
@@ -60,13 +73,14 @@ angular.module('autocv').controller('EditPersonCtrl', function($scope, $http, $s
         })
         .then(function(response) {
           //Response contains saved skill with new ID and everything
-          $scope.skills.push(response.data);
-          $scope.addskillToArea(response.data, area);
+          if (!_.some($scope.skills, { ID: response.data.ID })) {
+            $scope.skills.push(response.data);
+          }
+          $scope.addskillToArea(response.data.ID, area);
         }, function(response) {
           ngToast.warning('Kunde inte lägga till ' + skillName);
         });
     }
-    $scope.skillName = '';
   };
 
   $scope.keyUpTeach = function(event) {
@@ -94,6 +108,7 @@ angular.module('autocv').controller('EditPersonCtrl', function($scope, $http, $s
         return skill.ID == skillToRemove.ID;
       });
     }
+    chunkSkills();
   };
 
   $scope.removeskill = function(skillToRemove, area) {

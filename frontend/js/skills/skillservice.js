@@ -11,8 +11,11 @@ angular.module('autocv').service('SkillService', function skillservice($http, $q
     getSkills().then(
       function(response) {
         var skills = response.data;
-        var existingSkill =_.find(skills, { Name:skill.Name});
-        if(typeof(existingSkill === 'undefined')) {
+        var skillKey = _.toUpper(_.replace(skill.Name, ' ', ''));
+        var existingSkill =_.find(skills, function(s) {
+            return _.toUpper(_.replace(s.Name, ' ', '')) === skillKey;
+        });
+        if(typeof(existingSkill) === 'undefined') {
           deferred.resolve($http.post(url, skill));
         } else {
           deferred.resolve( { data:existingSkill });
