@@ -7,27 +7,27 @@ var autocv = angular.module('autocv', ['ui.router', 'ngToast', 'SkillFilters'])
     $stateProvider
       .state('home', {
         url: "/home",
-        templateUrl: "templates/peoplelist.html",
+        templateUrl: "js/people/peoplelist.html",
         controller: "ListPeopleCtrl"
       })
       .state('edit', {
         url: "/edit/:email",
-        templateUrl: "templates/editperson.html",
+        templateUrl: "js/person/editperson.html",
         controller: "EditPersonCtrl"
       })
       .state('add', {
         url: "/add",
-        templateUrl: "templates/editperson.html",
+        templateUrl: "js/person/editperson.html",
         controller: "EditPersonCtrl"
       })
       .state('skills', {
         url: "/skills",
-        templateUrl: "templates/skillList.html",
+        templateUrl: "js/skills/skillList.html",
         controller: "skillsCtrl"
       })
       .state('match', {
         url: "/match",
-        templateUrl: "templates/match.html",
+        templateUrl: "js/matches/match.html",
         controller: "MatchCtrl"
       });
   });

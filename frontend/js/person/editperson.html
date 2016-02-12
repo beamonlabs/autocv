@@ -19,7 +19,7 @@
     <h4>Saker jag kan lära ut</h4>
     <label for="skillFind">Hitta saker att lära ut</label>
     <input type="text" class="form-control" id="skillTeach" ng-keyup="keyUpTeach($event)" ng-model="teachFilter"/>
-    <div ng-repeat="skill in availableSkills() | filter: { Name: teachFilter }">
+    <div ng-repeat="skill in availableSkills() | filter: { Name: teachFilter } track by skill.ID">
       <button class="btn btn-info btn-sm" type="button" ng-click="addskillToArea(skill, 'teach')">
         {{ skill.Name }}
         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
@@ -29,8 +29,8 @@
   </div>
   <div class="form-group">
     <label>Saker jag kan lära ut</label>
-    <div class="row" ng-repeat="row in teachingSkills() | chunk:4">
-      <div class="col-md-2 text-center" ng-repeat="skill in row">
+    <div class="row" ng-repeat="row in teachingSkills | chunk:4">
+      <div class="col-md-2 text-center" ng-repeat="skill in row track by skill.ID">
         <button class="btn btn-info btn-sm" type="button" ng-click="removeskill(skill, 'teach')">
           {{ skill.Name }}
           <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
@@ -43,7 +43,7 @@
     <h4>Saker jag vill lära mig</h4>
     <label for="skillFind">Hitta kompetens</label>
     <input type="text" class="form-control" id="skillLearn" ng-keyup="keyUpLearn($event)" ng-model="learnFilter"/>
-    <div ng-repeat="skill in availableSkills() | filter: { Name: learnFilter }">
+    <div ng-repeat="skill in availableSkills() | filter: { Name: learnFilter } track by skill.ID">
       <button class="btn btn-info btn-sm" type="button" ng-click="addskillToArea(skill, 'learn')">
         {{ skill.Name }}
         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
@@ -52,8 +52,8 @@
   </div>
   <div class="form-group">
     <label>Det här vill jag lära mig</label>
-    <div class="row" ng-repeat="row in wantedSkills() | chunk:4">
-      <div class="col-md-2 text-center" ng-repeat="skill in row">
+    <div class="row" ng-repeat="row in wantedSkills | chunk:4">
+      <div class="col-md-2 text-center" ng-repeat="skill in row track by skill.ID">
         <button class="btn btn-info btn-sm" type="button" ng-click="removeskill(skill, 'learn')">
           {{ skill.Name }}
           <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
