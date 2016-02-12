@@ -58,7 +58,7 @@ angular.module('autocv').controller('EditPersonCtrl', function($scope, $http, $s
         $scope.person.WantedSkills.push(skill);
         ngToast.create(skill.Name + ' tillagt till det du vill lära dig!');
       }
-      chunkSkills();
+      // chunkSkills();
     } else {
       ngToast.warning('Kunde inte hitta kompetens med id ' + id + ' för att lägga till');
     }
@@ -108,7 +108,7 @@ angular.module('autocv').controller('EditPersonCtrl', function($scope, $http, $s
         return skill.ID == skillToRemove.ID;
       });
     }
-    chunkSkills();
+    // chunkSkills();
   };
 
   $scope.removeskill = function(skillToRemove, area) {
