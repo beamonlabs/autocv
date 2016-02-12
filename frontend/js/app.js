@@ -1,6 +1,6 @@
 'use strict';
 
-var autocv = angular.module('autocv', ['ui.router', 'ngToast', 'SkillFilters'])
+var autocv = angular.module('autocv', ['ui.router', 'ngToast'])
   .config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/home");
 
@@ -23,7 +23,7 @@ var autocv = angular.module('autocv', ['ui.router', 'ngToast', 'SkillFilters'])
       .state('skills', {
         url: "/skills",
         templateUrl: "js/skills/skillsList.html",
-        controller: "skillsCtrl"
+        controller: "SkillsCtrl"
       })
       .state('match', {
         url: "/match",

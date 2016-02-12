@@ -17,7 +17,7 @@
       </th> -->
   </thead>
   <tbody>
-    <tr ng-repeat="skill in skills" class="clickable" ng-include="getTemplate(skill)"></tr>
+    <tr ng-repeat="skill in skills track by skill.ID" class="clickable" ng-include="getTemplate(skill)"></tr>
   </tbody>
 </table>
 

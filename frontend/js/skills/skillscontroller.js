@@ -1,21 +1,21 @@
 'use strict';
 
-angular.module('autocv').controller('skillsCtrl', function($scope, $http, $state, ngToast, SkillService, MatchService) {
+angular.module('autocv').controller('SkillsCtrl', function($scope, $http, $state, ngToast, SkillService) {
 
   $scope.skills = [];
-  
-  skillservice.getskills().then(function(data) {
-    _.forEach(data, function(skill) {
 
-      _.assign (skill, {
+  SkillService.getSkills().then(function(response) {
+    _.forEach(response.data, function(skill) {
+
+      _.assign(skill, {
         editing: false,
-        teachers: MatchService.findTeachersWithskill(skill.Name).length,
-        students: MatchService.findPeopleWantingskill(skill.Name).length
+        // teachers: MatchService.findTeachersWithskill(skill.Name).length,
+        // students: MatchService.findPeopleWantingskill(skill.Name).length
       });
     });
-    $scope.skills = data;
-  }, function(status) {
-    ngToast.warning('Kunde inte hämta kompetenser ' + status);
+    $scope.skills = response.data;
+  }, function(respons) {
+    ngToast.warning('Kunde inte hämta kompetenser ' + response.status);
   });
 
   $scope.edit = function(skill) {
@@ -23,21 +23,19 @@ angular.module('autocv').controller('skillsCtrl', function($scope, $http, $state
   };
 
   $scope.save = function(skill) {
-    skillservice.saveskill(skill).then(function(skill) {
-      ngToast.create(skill.Name + ' was saved');
+    SkillService.saveSkill(skill).then(function(response) {
+      ngToast.create(response.data.Name + ' was saved');
       skill.editing = false;
-    },function(msg) {
-      ngToast.warning(msg);
+    }, function(response) {
+      ngToast.warning(response.message);
       //Keep editing mode, let user try again or cancel
     });
   };
 
-$scope.getTemplate = function(skill) {
-  if(skill.editing) {
-    return 'skillEdit';
-  }
-  return 'skillView';
-};
-
-
+  $scope.getTemplate = function(skill) {
+    if (skill.editing) {
+      return 'skillEdit';
+    }
+    return 'skillView';
+  };
 });
