@@ -80,7 +80,7 @@ func getPersonsHandler(response http.ResponseWriter, request *http.Request) {
 func getAllPeople() []Person {
 	var persons []Person
 	execute(func(db *gorm.DB) {
-		db.Find(&persons)
+		db.Preload("TeachingSkills").Preload("WantedSkills").Find(&persons)
 	})
 	return persons
 }

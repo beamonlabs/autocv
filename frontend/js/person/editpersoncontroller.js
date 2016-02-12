@@ -46,7 +46,7 @@ angular.module('autocv').controller('EditPersonCtrl', function($scope, $http, $s
   };
 
   $scope.addskillToArea = function(id, area) {
-    var skill = _.find($scope.skills, {
+    var skill = _.find($scope.availableSkills(), {
       ID: id
     });
     if (typeof(skill) !== 'undefined') {
@@ -60,7 +60,7 @@ angular.module('autocv').controller('EditPersonCtrl', function($scope, $http, $s
       }
       // chunkSkills();
     } else {
-      ngToast.warning('Kunde inte hitta kompetens med id ' + id + ' för att lägga till');
+      ngToast.warning('Kunde inte lägga till kompetens');
     }
   };
 

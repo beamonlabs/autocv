@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('autocv').controller('skillsCtrl', function($scope, $http, $state, ngToast, skillservice, MatchService) {
+angular.module('autocv').controller('skillsCtrl', function($scope, $http, $state, ngToast, SkillService, MatchService) {
 
   $scope.skills = [];
-
+  
   skillservice.getskills().then(function(data) {
     _.forEach(data, function(skill) {
 
