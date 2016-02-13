@@ -6,6 +6,8 @@ EXPOSE 8080
 
 CMD /root/start.sh
 
+VOLUME /root/.sqlite
+
 ENV GOPATH $HOME/gohome
 ENV GOBIN $HOME/gohome/bin
 
