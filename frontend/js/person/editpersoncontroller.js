@@ -68,7 +68,7 @@ angular.module('autocv').controller('EditPersonCtrl', function($scope, $http, $s
   //Add a new skill to the DB
   $scope.addskill = function(skillName, area) {
     if (skillName.length > 1) {
-      SkillService.addskill({
+      SkillService.addSkill({
           Name: skillName
         })
         .then(function(response) {
