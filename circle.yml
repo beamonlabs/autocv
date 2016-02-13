@@ -24,3 +24,8 @@ deployment:
     commands:
       - docker skill autocv beamonlabs/autocv:dev
       - docker push beamonlabs/autocv:dev
+  sqlite: 
+    branch: sqlite
+    commands:
+      - docker skill autocv beamonlabs/autocv:sqlite
+      - docker push beamonlabs/autocv:sqlite
