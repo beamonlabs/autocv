@@ -175,7 +175,7 @@ func execute(fn func(db *gorm.DB)) {
 }
 
 func getDB() *gorm.DB {
-	db, err := gorm.Open("sqlite3", "autocv.db")
+	db, err := gorm.Open("sqlite3", "/root/.sqlite/autocv.db")
 	if err != nil {
 		panic(err)
 	}
