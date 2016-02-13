@@ -13,7 +13,7 @@ ENV GOBIN $HOME/gohome/bin
 
 RUN 	echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
 	apk update && \
-	apk add bash go nodejs git make python sqlite gcc && \
+	apk add bash go nodejs git make python sqlite gcc libc6-compat && \
 	npm install -g bower && \
 	mkdir -p /root/frontend $GOPATH/bin $GOPATH/src
 
