@@ -11,7 +11,7 @@ ENV GOBIN $HOME/gohome/bin
 
 RUN 	echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
 	apk update && \
-	apk add bash go nodejs git make python sqlite && \
+	apk add bash go nodejs git make python sqlite gcc && \
 	npm install -g bower && \
 	mkdir -p /root/frontend $GOPATH/bin $GOPATH/src
 
@@ -20,5 +20,5 @@ COPY frontend /root/frontend
 COPY main.go start.sh Makefile /root/
 
 RUN	make main && \
-	apk del git python make && \
+	apk del git python make gcc && \
 	rm -rf /var/cache/apk/* /root/Makefile /root/main.go
