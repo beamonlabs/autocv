@@ -24,3 +24,8 @@ deployment:
     commands:
       - docker tag autocv beamonlabs/autocv:dev
       - docker push beamonlabs/autocv:dev
+  other: 
+    branch: /^((?!(master|dev)).)*$/
+    commands:
+      - docker tag autocv beamonlabs/autocv:$CIRCLE_BRANCH
+      - docker push beamonlabs/autocv:$CIRCLE_BRANCH
