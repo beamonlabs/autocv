@@ -18,7 +18,22 @@
   <div class="form-group">
     <h4>Saker jag kan lära ut</h4>
     <label for="skillFind">Hitta saker att lära ut</label>
-    <input type="text" class="form-control" id="skillTeach" ng-keyup="keyUpTeach($event)" ng-model="teachFilter" placeholder="Börja skriv för att söka kompetens"/>
+    <input type="text" class="form-control" id="skillTeach" ng-keyup="keyUpTeach($event)" ng-model="teachFilter" placeholder="Börja skriv för att söka kompetens" />
+    <div ng-show="teachFilter.length > 1">
+    <div class="col-md-2">
+    <button class="btn btn-sm btn-success" type="button" ng-click="addskill(teachFilter, 'teach')">
+                Ny och är ut
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+              </button>
+              </div>
+    <div class="col-md-2">
+              <button class="btn btn-sm btn-info " type="button" ng-click="addskill(teachFilter, 'learn')">
+                Ny och lär dig
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+              </button>
+              </div>
+    </div>
+
     <div ng-show="teachFilter.length > 0">
       <table class="table table-striped">
         <thead>
@@ -43,7 +58,6 @@
               <button class="btn btn-sm btn-info " type="button" ng-click="addskillToArea(skill.ID, 'learn')">
                 Lär dig
                 <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                <br/>
               </button>
             </td>
           </tr>
