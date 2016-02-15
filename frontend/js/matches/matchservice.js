@@ -41,12 +41,14 @@ angular.module('autocv').service('MatchService', function matchService($http, $q
 
   var mapSkillsTeachersAndStudents = function(people) {
     var stas = _.map(skillsWithTeachers(people), function(skill) {
+      if(skill != null) {
       var map = {
         skill: skill,
         teachers: findTeachersWithskill(people, skill.ID),
         students: findPeopleWantingskill(people, skill.ID)
       };
       return map;
+    }
     });
     return stas;
   };
@@ -54,9 +56,11 @@ angular.module('autocv').service('MatchService', function matchService($http, $q
   var mapSkillsAndStudents = function(people) {
     var stas = _.map(skillsThatLackTeachers(people), function(skill) {
       var map = {
+      if(skill != null) {
         skill: skill,
         students: findPeopleWantingskill(people, skill.ID)
       };
+    }
       return map;
     });
     return stas;
