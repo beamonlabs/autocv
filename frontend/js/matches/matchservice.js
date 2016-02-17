@@ -34,7 +34,7 @@ angular.module('autocv').service('MatchService', function matchService($http, $q
 
   var skillsThatLackTeachers = function(people) {
     var diff = _.differenceWith(skillsThatNeedTeachers(people), skillsWithTeachers(people), function(need, has) {
-      return need.ID === has.ID;
+      return need !== null && has !== null && need.ID === has.ID;
     });
     return diff;
   };

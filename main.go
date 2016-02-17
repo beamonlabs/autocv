@@ -163,7 +163,10 @@ func storePerson(person *Person) {
 		if db.NewRecord(person) {
 			db.Create(&person)
 		} else {
+
 			db.Save(&person)
+			db.Model(&person).Association("WantedSkills").Replace(person.WantedSkills)
+			db.Model(&person).Association("TeachingSkills").Replace(person.TeachingSkills)
 		}
 	})
 }
@@ -176,6 +179,7 @@ func execute(fn func(db *gorm.DB)) {
 
 func getDB() *gorm.DB {
 	db, err := gorm.Open("sqlite3", "/root/.sqlite/autocv.db")
+	// db, err := gorm.Open("sqlite3", "autocv.db") <-- this is used on for instance a local machine
 	if err != nil {
 		panic(err)
 	}
