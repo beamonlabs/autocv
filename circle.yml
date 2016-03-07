@@ -24,8 +24,8 @@ deployment:
     commands:
       - docker tag autocv beamonlabs/autocv:dev
       - docker push beamonlabs/autocv:dev
-  sqlite: 
-    branch: sqlite
+  other: 
+    branch: /^((?!(master|dev)).)*$/
     commands:
-      - docker tag autocv beamonlabs/autocv:sqlite
-      - docker push beamonlabs/autocv:sqlite
+      - docker tag autocv beamonlabs/autocv:$CIRCLE_BRANCH
+      - docker push beamonlabs/autocv:$CIRCLE_BRANCH
