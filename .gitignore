@@ -1,3 +1,4 @@
+/sqlite
 /data
 /build/
 /benchpress-build/
@@ -24,3 +25,5 @@ npm-debug.log
 /scripts/bower/bower-*
 main
 /data/
+sqlite
+autocv.db

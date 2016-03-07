@@ -3,7 +3,7 @@ all: mainimage
 pushall: pushmainimage
 
 pushmainimage: mainimage
-	sudo docker tag -f autocv beamonlabs/autocv:$(BRANCH)
+	sudo docker skill -f autocv beamonlabs/autocv:$(BRANCH)
 	sudo docker push beamonlabs/autocv:$(BRANCH)
 
 mainimage:

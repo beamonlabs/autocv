@@ -1,8 +1,8 @@
 <div class="page-header">
   <h1>Alla Beamon People</h1>
 </div>
-<div class="container">
-    <table class="table">
+<div>
+    <table class="table table-striped">
       <thead>
         <tr>
           <th>#</th>
@@ -16,7 +16,7 @@
           <td>{{ person.Email }}</td>
           <td>{{ person.Name }}</td>
           <td>{{ person.Info }}</td>
-          <td><button class="btn btn-danger btn-xs" ng-click="deletePerson(person.Email)">x</button>
+          <td><button class="btn btn-danger btn-xs" ng-click="deletePerson(person.Email)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></button>
         </tr>
       </tbody>
     </table>

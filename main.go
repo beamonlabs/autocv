@@ -1,230 +1,218 @@
 package main
 
 import (
-  "os"
-  "io"
-  "encoding/json"
-  "io/ioutil"
-  "log"
-  "net/http"
-  "github.com/gorilla/mux"
-  "gopkg.in/mgo.v2"
-  "gopkg.in/mgo.v2/bson"
+	"encoding/json"
+	"io"
+	"io/ioutil"
+	"log"
+	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
+	_ "github.com/mattn/go-sqlite3"
 )
 
-type Tag struct  {
-  Name string `bson:"_id"`
-  Description string
+//Skill is simply a skill a person can have in his field of expertise
+type Skill struct {
+	gorm.Model
+	Name        string `sql:"unique"`
+	Description string
 }
 
-type Tags []Tag
-
-type Project struct {
-  Id string `bson:"_id"`
-  Name string
-  Description string
-  Tags Tags
-}
-
-type Projects []Project
-
+//Person is an employee at beamon
 type Person struct {
-  Name string
-  Email string `bson:"_id"`
-  Info string
-  Projects Projects
-  Tags Tags
-  WantedSkills Tags
-  TeachingSkills Tags
+	gorm.Model
+	Name           string
+	Email          string `sql:"unique"`
+	Info           string
+	WantedSkills   []Skill `gorm:"many2many:user_wantedskills;"`
+	TeachingSkills []Skill `gorm:"many2many:user_teachingskills;"`
 }
-
-type Persons []Person
-
 
 func getPersonHandler(response http.ResponseWriter, request *http.Request) {
-  //handles call to the /api path
+	//Get email from path
+	vars := mux.Vars(request)
+	email := vars["email"]
 
-  //Get id
-  vars := mux.Vars(request)
-  email := vars["email"]
+	person := getPersonByEmail(email)
+	response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	response.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(response).Encode(person); err != nil {
+		panic(err)
+	}
+}
 
-  person := GetPersonByEmail(email);
-  response.Header().Set("Content-Type", "application/json; charset=UTF-8")
-  response.WriteHeader(http.StatusOK)
-  if err := json.NewEncoder(response).Encode(person); err != nil {
-      panic(err)
-  }
+func getPersonByEmail(email string) Person {
+	person := Person{}
+
+	execute(func(db *gorm.DB) {
+		db.Preload("TeachingSkills").Preload("WantedSkills").Where("email = ?", email).Find(&person)
+	})
+	return person
 }
 
 func deletePersonHandler(response http.ResponseWriter, request *http.Request) {
-  //handles call to the /api path
 
-  //Get id
-  vars := mux.Vars(request)
-  email := vars["email"]
+	//Get id
+	vars := mux.Vars(request)
+	email := vars["email"]
 
-  DeletePersonByEmail(email);
-  response.Header().Set("Content-Type", "application/json; charset=UTF-8")
-  response.WriteHeader(http.StatusOK)
+	deletePersonByEmail(email)
+	response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	response.WriteHeader(http.StatusOK)
 }
 
-func DeletePersonByEmail(email string) {
-  Execute(func(session *mgo.Session) {
-    err := session.DB("autocv").C("person").Remove(bson.M{"Email": email})
-    if err != nil {
-      panic(err)
-    }
-  })
+func deletePersonByEmail(email string) {
+	execute(func(db *gorm.DB) {
+		db.Where("email = ?", email).Delete(&Person{})
+	})
 }
 
 func getPersonsHandler(response http.ResponseWriter, request *http.Request) {
-  persons := GetAllPeople();
-  response.Header().Set("Content-Type", "application/json; charset=UTF-8")
-  response.WriteHeader(http.StatusOK)
-  if err := json.NewEncoder(response).Encode(persons); err != nil {
-      panic(err)
-  }
+	persons := getAllPeople()
+	response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	response.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(response).Encode(persons); err != nil {
+		panic(err)
+	}
 }
 
-func getTagsHandler(response http.ResponseWriter, request *http.Request) {
-  tags := GetAllTags();
-  response.Header().Set("Content-Type", "application/json; charset=UTF-8")
-  response.WriteHeader(http.StatusOK)
-  if err := json.NewEncoder(response).Encode(tags); err != nil {
-      panic(err)
-  }
+func getAllPeople() []Person {
+	var persons []Person
+	execute(func(db *gorm.DB) {
+		db.Preload("TeachingSkills").Preload("WantedSkills").Find(&persons)
+	})
+	return persons
 }
 
-func postTagHandler(response http.ResponseWriter, request *http.Request) {
-  //deserialize Person
+func getSkillsHandler(response http.ResponseWriter, request *http.Request) {
+	skills := getAllSkills()
+	response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	response.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(response).Encode(skills); err != nil {
+		panic(err)
+	}
+}
 
-  //save to db
-  var tag Tag
-    body, err := ioutil.ReadAll(io.LimitReader(request.Body, 1048576))
-    if err != nil {
-        panic(err)
-    }
-    if err := request.Body.Close(); err != nil {
-        panic(err)
-    }
-    if err := json.Unmarshal(body, &tag); err != nil {
-        response.Header().Set("Content-Type", "application/json; charset=UTF-8")
-        response.WriteHeader(422) // unprocessable entity
-        if err := json.NewEncoder(response).Encode(err); err != nil {
-            panic(err)
-        }
-    }
+func getAllSkills() []Skill {
+	var skills []Skill
+	execute(func(db *gorm.DB) {
+		db.Find(&skills)
+	})
+	return skills
+}
 
-    StoreTag(tag)
-    response.Header().Set("Content-Type", "application/json; charset=UTF-8")
-    response.WriteHeader(http.StatusCreated)
+func postSkillHandler(response http.ResponseWriter, request *http.Request) {
+	var skill Skill
+	body, err := ioutil.ReadAll(io.LimitReader(request.Body, 1048576))
+	if err != nil {
+		panic(err)
+	}
+	if err := request.Body.Close(); err != nil {
+		panic(err)
+	}
+	if err := json.Unmarshal(body, &skill); err != nil {
+		response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		response.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(response).Encode(err); err != nil {
+			panic(err)
+		}
+	}
+
+	storeSkill(&skill)
+	response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	response.WriteHeader(http.StatusCreated)
+	json.NewEncoder(response).Encode(skill)
+}
+
+func storeSkill(skill *Skill) {
+	execute(func(db *gorm.DB) {
+		if db.NewRecord(skill) {
+			db.Create(&skill)
+		} else {
+			db.Save(&skill)
+		}
+	})
 }
 
 func postPersonHandler(response http.ResponseWriter, request *http.Request) {
-  var person Person
-    body, err := ioutil.ReadAll(io.LimitReader(request.Body, 1048576))
-    if err != nil {
-        panic(err)
-    }
-    if err := request.Body.Close(); err != nil {
-        panic(err)
-    }
-    if err := json.Unmarshal(body, &person); err != nil {
-        response.Header().Set("Content-Type", "application/json; charset=UTF-8")
-        response.WriteHeader(422) // unprocessable entity
-        if err := json.NewEncoder(response).Encode(err); err != nil {
-            panic(err)
-        }
-    }
+	var person Person
+	body, err := ioutil.ReadAll(io.LimitReader(request.Body, 1048576))
+	if err != nil {
+		panic(err)
+	}
+	if err := request.Body.Close(); err != nil {
+		panic(err)
+	}
+	if err := json.Unmarshal(body, &person); err != nil {
+		response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		response.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(response).Encode(err); err != nil {
+			panic(err)
+		}
+	}
 
-    StorePerson(person)
-    response.Header().Set("Content-Type", "application/json; charset=UTF-8")
-    response.WriteHeader(http.StatusCreated)
+	storePerson(&person)
+	response.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	response.WriteHeader(http.StatusCreated)
+	json.NewEncoder(response).Encode(person)
 }
 
-func GetPersonByEmail(email string) Person {
-  result := Person{}
+func storePerson(person *Person) {
+	execute(func(db *gorm.DB) {
+		if db.NewRecord(person) {
+			db.Create(&person)
+		} else {
 
-  Execute(func(session *mgo.Session) {
-    all := session.DB("autocv").C("person")
-    err := all.Find(bson.M{"_id": email}).One(&result)
-    if err != nil {
-      panic(err)
-    }
-  })
-
-  return result;
+			db.Save(&person)
+			db.Model(&person).Association("WantedSkills").Replace(person.WantedSkills)
+			db.Model(&person).Association("TeachingSkills").Replace(person.TeachingSkills)
+		}
+	})
 }
 
-func GetAllTags() Tags {
-  var tags Tags
-  Execute(func(session *mgo.Session) {
-    all := session.DB("autocv").C("tag")
-    err := all.Find(nil).All(&tags)
-    if err != nil {
-      panic(err)
-    }
-  })
-  return tags;
+func execute(fn func(db *gorm.DB)) {
+	db := getDB()
+	// defer db.Close()
+	fn(db)
 }
 
-func StoreTag(tag Tag) {
-  Execute(func(session *mgo.Session) {
-    session.DB("autocv").C("tag").UpsertId(tag.Name, tag)
-  })
+func getDB() *gorm.DB {
+	db, err := gorm.Open("sqlite3", "/root/.sqlite/autocv.db")
+	// db, err := gorm.Open("sqlite3", "autocv.db") <-- this is used on for instance a local machine
+	if err != nil {
+		panic(err)
+	}
+	db.LogMode(true)
+	return &db
 }
 
-func GetAllPeople() Persons {
-  var persons Persons
-  Execute(func(session *mgo.Session) {
-    all := session.DB("autocv").C("person")
-    err := all.Find(nil).All(&persons)
-    if err != nil {
-      panic(err)
-    }
-  })
-  return persons
+func initDb() {
+	db := getDB()
+	//Migrations etc.
+	db.AutoMigrate(&Person{}, &Skill{})
 }
-
-func StorePerson(person Person) {
-  Execute(func(session *mgo.Session) {
-    session.DB("autocv").C("person").UpsertId(person.Email, person)
-  })
-}
-
-func Execute(fn func(session *mgo.Session)) {
-  session := GetSession();
-  defer session.Close()
-  fn(session);
-}
-
-func GetSession() *mgo.Session {
-  session, err := mgo.Dial(os.Args[1])
-  if err != nil {
-    panic(err)
-  }
-  return session;
-}
-
 
 func main() {
-  r := mux.NewRouter()
+	initDb()
 
-  api := r.PathPrefix("/api").Subrouter()
+	r := mux.NewRouter()
 
-  api.HandleFunc("/people/{email}", getPersonHandler).Methods("GET")
-  api.HandleFunc("/people/{email}", deletePersonHandler).Methods("DELETE")
+	api := r.PathPrefix("/api").Subrouter()
 
-  api.HandleFunc("/people/", getPersonsHandler).Methods("GET")
+	api.HandleFunc("/people/{email}", getPersonHandler).Methods("GET")
+	api.HandleFunc("/people/{email}", deletePersonHandler).Methods("DELETE")
 
-  api.HandleFunc("/people/", postPersonHandler).Methods("POST")
+	api.HandleFunc("/people/", getPersonsHandler).Methods("GET")
 
-  api.HandleFunc("/tags/", getTagsHandler).Methods("GET")
-  api.HandleFunc("/tags/", postTagHandler).Methods("POST")
+	api.HandleFunc("/people/", postPersonHandler).Methods("POST")
 
-  r.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend/")))
+	api.HandleFunc("/skills/", getSkillsHandler).Methods("GET")
+	api.HandleFunc("/skills/", postSkillHandler).Methods("POST")
 
-  http.Handle("/", r)
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend/")))
 
-  log.Fatal(http.ListenAndServe(":8080", nil))
+	http.Handle("/", r)
+
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
