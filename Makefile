@@ -21,7 +21,7 @@ goget:
 bower:
 	cd frontend; bower --allow-root install
 
-run: mainimage
+run: mainimage 
 	sudo docker run --rm -p 8080:8080 --name autocv autocv
 
 install_dev:
