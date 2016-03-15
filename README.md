@@ -10,3 +10,5 @@ on virtual machine:
   
   clone this git repo
   develop and profit
+
+docker run -d --name autocv --volumes_from autocv_data -p 8080:8080 --net=dmz beamonlabs/autocv:prod
