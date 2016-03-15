@@ -19,7 +19,7 @@ RUN 	echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/reposi
 
 COPY main.sh /etc/profile.d/
 COPY frontend /root/frontend
-COPY main.go start.sh Makefile /root/
+COPY main.go Makefile /root/
 
 RUN	make main && \
 	apk del git python make gcc g++ && \
