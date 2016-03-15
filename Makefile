@@ -15,7 +15,7 @@ main: bower goget main.go
 npm:
 	npm install frontend
 
-goget:
+goget: 
 	go get
 
 bower:
