@@ -184,7 +184,7 @@ func getDB() *gorm.DB {
 		panic(err)
 	}
 	db.LogMode(true)
-	return &db
+	return db
 }
 
 func initDb() {
