@@ -4,7 +4,7 @@ WORKDIR /root
 
 EXPOSE 8080
 
-CMD /root/start.sh
+CMD /root/main
 
 VOLUME /root/.sqlite
 
