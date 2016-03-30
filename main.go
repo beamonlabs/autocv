@@ -19,6 +19,11 @@ type Skill struct {
 	Description string
 }
 
+type PersonVM struct {
+	Person 		Person
+	Editable	bool
+} 
+
 //Person is an employee at beamon
 type Person struct {
 	gorm.Model
@@ -30,11 +35,13 @@ type Person struct {
 }
 
 func getPersonHandler(response http.ResponseWriter, request *http.Request) {
+	//read header
 	//Get email from path
 	vars := mux.Vars(request)
 	email := vars["email"]
 
 	person := getPersonByEmail(email)
+	pvm := PersonVM {person, true}
 	response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	response.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(response).Encode(person); err != nil {
