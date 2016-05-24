@@ -22,7 +22,7 @@ type Skill struct {
 type PersonVM struct {
 	Person 		Person
 	Editable	bool
-} 
+}
 
 //Person is an employee at beamon
 type Person struct {
@@ -40,8 +40,10 @@ func getPersonHandler(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	email := vars["email"]
 
+	loggedInEmail := request.Header.Get("X-Forwarded-Email")
+
 	person := getPersonByEmail(email)
-	pvm := PersonVM {person, true}
+	pvm := PersonVM {person, email == loggedInEmail}
 	response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	response.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(response).Encode(person); err != nil {
