@@ -27,3 +27,4 @@ main
 /data/
 sqlite
 autocv.db
+/.vagrant
