@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/mattn/go-sqlite3"
@@ -179,7 +180,7 @@ func execute(fn func(db *gorm.DB)) {
 
 func getDB() *gorm.DB {
 	db, err := gorm.Open("sqlite3", "/root/.sqlite/autocv.db")
-	// db, err := gorm.Open("sqlite3", "autocv.db") <-- this is used on for instance a local machine
+	//db, err := gorm.Open("sqlite3", "autocv.db")
 	if err != nil {
 		panic(err)
 	}
@@ -212,7 +213,7 @@ func main() {
 
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend/")))
 
-	http.Handle("/", r)
+	http.Handle("/", handlers.CORS()(r))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
