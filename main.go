@@ -46,7 +46,7 @@ func getPersonHandler(response http.ResponseWriter, request *http.Request) {
 	pvm := PersonVM {person, email == loggedInEmail}
 	response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	response.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(response).Encode(person); err != nil {
+	if err := json.NewEncoder(response).Encode(pvm); err != nil {
 		panic(err)
 	}
 }

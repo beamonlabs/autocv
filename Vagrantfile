@@ -8,6 +8,7 @@ Vagrant.configure(2) do |config|
      vb.memory = "4096"
      vb.customize ["modifyvm", :id, "--vram", "32"]
    end
+   config.vm.network :forwarded_port, guest: 22, host: 1234
 
   config.vm.provision "shell", inline: <<-SHELL
      sudo su
