@@ -26,5 +26,4 @@ npm-debug.log
 main
 /data/
 sqlite
-autocv.db
 /.vagrant
