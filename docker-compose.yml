@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  autocv:
+    image: beamonlabs/autocv:sqlite
+    expose:
+      - "8080"
+    volumes:
+      - autocv_data:/root/.sqlite
+
+volumes:
+  autocv_data:
+    external: true
+
+networks:
+  default:
+    external:
+      name: env_dmz
